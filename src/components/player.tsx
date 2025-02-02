@@ -95,13 +95,35 @@ export function Player() {
               <SkipForward className="w-4 h-4" />
             </Button>
           </div>
-          <Slider
-            className="w-full mt-2"
-            value={[progress]}
-            max={100}
-            step={1}
-            onValueChange={handleSliderChange}
-          />
+          <div className="flex items-center gap-2 w-full">
+            <span className="text-xs text-gray-500 dark:text-gray-400 min-w-[40px]">
+              {currentTrack
+                ? `${Math.floor(
+                    ((progress / 100) * currentTrack.duration) / 60
+                  )}:${Math.floor(
+                    ((progress / 100) * currentTrack.duration) % 60
+                  )
+                    .toString()
+                    .padStart(2, '0')}`
+                : '0:00'}
+            </span>
+            <Slider
+              className="flex-1"
+              value={[progress]}
+              max={100}
+              step={1}
+              onValueChange={handleSliderChange}
+            />
+            <span className="text-xs text-gray-500 dark:text-gray-400 min-w-[40px]">
+              {currentTrack
+                ? `${Math.floor(currentTrack.duration / 60)}:${(
+                    currentTrack.duration % 60
+                  )
+                    .toString()
+                    .padStart(2, '0')}`
+                : '0:00'}
+            </span>
+          </div>
         </div>
 
         <div className="flex items-center gap-2 w-1/3 justify-end">
