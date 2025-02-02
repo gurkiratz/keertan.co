@@ -6,6 +6,7 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 [ ] Cache
 [ ] Artwork
 [ ] Shortcuts to navigate, volume, seek forward and backward,
+[ ] Search bar
 
 ## Getting Started
 

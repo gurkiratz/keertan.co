@@ -1,9 +1,9 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { cn } from '@/lib/utils'
-import { Library, ListMusic, Disc } from 'lucide-react'
+import { Library, ListMusic, Disc, Search } from 'lucide-react'
 
 const routes = [
   {
@@ -25,9 +25,27 @@ const routes = [
 
 export function SidebarNav() {
   const pathname = usePathname()
+  const router = useRouter()
 
   return (
     <nav className="flex flex-col gap-2 p-4">
+      <div className="flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-800">
+        <Search className="w-4 h-4" />
+        <textarea
+          placeholder="Search..."
+          rows={1}
+          className="w-full bg-transparent outline-none placeholder:text-gray-500 dark:placeholder:text-gray-400 resize-none overflow-hidden"
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+              e.preventDefault()
+              const query = e.currentTarget.value.trim()
+              if (query) {
+                router.push(`/search?q=${encodeURIComponent(query)}`)
+              }
+            }
+          }}
+        />
+      </div>
       {routes.map((route) => (
         <Link
           key={route.href}
