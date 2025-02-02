@@ -2,11 +2,12 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Goals
 
-[ ] Mobile friendly,
+[ ] Mobile friendly
 [ ] Cache
-[ ] Artwork
+[ ] Artwork for track
 [ ] Shortcuts to navigate, volume, seek forward and backward,
 [ ] Search bar
+[ ] background patterns, theme selections
 
 ## Getting Started
 
