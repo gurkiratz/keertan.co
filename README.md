@@ -1,5 +1,12 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Goals
+
+[ ] Mobile friendly,
+[ ] Cache
+[ ] Artwork
+[ ] Shortcuts to navigate, volume, seek forward and backward,
+
 ## Getting Started
 
 First, run the development server:
