@@ -34,9 +34,6 @@ type Library = {
   }
 }
 
-const user_id = process.env.USER_ID || ''
-const token = process.env.TOKEN || ''
-
 export async function getLibrary(): Promise<Library> {
   // const response = await fetch('https://library.ibroadcast.com/`', {
   //   method: 'POST',

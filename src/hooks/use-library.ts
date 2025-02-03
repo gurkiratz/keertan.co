@@ -32,8 +32,8 @@ type Library = {
   }
 }
 
-const user_id = 2222979
-const token = 'ab0b0cd4-e0da-11ef-bc7f-b49691aa2236'
+const user_id = process.env.USER_ID
+const token = process.env.TOKEN
 
 export function useLibrary() {
   const [loading, setLoading] = useState(true)

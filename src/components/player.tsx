@@ -55,8 +55,8 @@ export function Player() {
   return (
     <div className="fixed bottom-0 left-0 right-0 h-20 bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 px-4">
       <div className="flex items-center justify-between h-full max-w-7xl mx-auto">
-        <div className="flex items-center gap-4 w-1/3">
-          <div className="w-12 h-12 bg-gray-200 dark:bg-gray-800 rounded">
+        <div className="items-center gap-4 w-1/3 hidden md:flex">
+          <div className="min-w-12 min-h-12 bg-gray-200 dark:bg-gray-800 rounded track-pattern">
             {loading && (
               <div className="w-full h-full flex items-center justify-center">
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-900 dark:border-white" />
@@ -67,13 +67,13 @@ export function Player() {
             <h3 className="text-sm font-medium">
               {currentTrack?.title || 'No track selected'}
             </h3>
-            <p className="text-xs text-gray-500 dark:text-gray-400">
+            <p className="text-xs hidden text-gray-500 dark:text-gray-400">
               {currentTrack && library?.albums[currentTrack.albumId]?.name}
             </p>
           </div>
         </div>
 
-        <div className="flex flex-col items-center w-1/3">
+        <div className="flex flex-col items-center w-full md:w-1/2">
           <div className="flex items-center gap-4">
             <Button variant="ghost" size="icon" className="w-8 h-8">
               <SkipBack className="w-4 h-4" />

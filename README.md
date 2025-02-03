@@ -3,11 +3,15 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 ## Goals
 
 [ ] Mobile friendly
-[ ] Cache
+[ ] API Cache
 [ ] Artwork for track
 [ ] Shortcuts to navigate, volume, seek forward and backward,
 [ ] Search bar
 [ ] background patterns, theme selections
+[ ] recently played, currently playing
+[ ] store last played, last played's duration, recently played in local history
+[ ] queue for previous/next track
+[ ] login with a code that will give access to the app - early access
 
 ## Getting Started
 

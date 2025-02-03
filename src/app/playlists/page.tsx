@@ -40,7 +40,7 @@ export default function PlaylistsPage() {
               <CardTitle>{playlist.name}</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg mb-2" />
+              <div className="aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg mb-2 playlist-pattern" />
               <p className="text-sm text-gray-500 dark:text-gray-400">
                 {playlist.tracks?.length} tracks
               </p>

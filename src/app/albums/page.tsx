@@ -40,7 +40,7 @@ export default function AlbumsPage() {
               <CardTitle>{album.name}</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg mb-2" />
+              <div className="aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg mb-2 album-pattern" />
               <p className="text-sm text-gray-500 dark:text-gray-400">
                 {album.tracks?.length} tracks
               </p>

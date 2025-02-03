@@ -28,7 +28,7 @@ export function TracksTable({ tracks, getAlbumName }: TracksTableProps) {
         <TableRow>
           <TableHead className="w-[50px]"></TableHead>
           <TableHead>Title</TableHead>
-          <TableHead className="hidden sm:table-cell">Album</TableHead>
+          <TableHead className="hidden md:table-cell">Album</TableHead>
           <TableHead className="text-right">Duration</TableHead>
         </TableRow>
       </TableHeader>
@@ -38,22 +38,24 @@ export function TracksTable({ tracks, getAlbumName }: TracksTableProps) {
             <TableCell>
               <button
                 className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full relative"
-                onClick={() => setCurrentTrack(track)}
+                onClick={() =>
+                  currentTrack?.id !== track.id && setCurrentTrack(track)
+                }
               >
                 {currentTrack?.id === track.id ? (
-                  <div className="flex items-center gap-[2px]">
+                  <div className="h-4 flex items-center justify-center gap-[3px]">
                     <div
-                      className={`w-[2px] h-3 bg-black dark:bg-white ${
+                      className={`w-[2px] h-3 bg-primary  ${
                         playing ? 'animate-music-bar-1' : ''
                       }`}
                     />
                     <div
-                      className={`w-[2px] h-3 bg-black dark:bg-white ${
+                      className={`w-[2px] h-3 bg-primary  ${
                         playing ? 'animate-music-bar-2' : ''
                       }`}
                     />
                     <div
-                      className={`w-[2px] h-2.5 bg-black dark:bg-white ${
+                      className={`w-[2px] h-2.5 bg-primary  ${
                         playing ? 'animate-music-bar-3' : ''
                       }`}
                     />
@@ -64,7 +66,7 @@ export function TracksTable({ tracks, getAlbumName }: TracksTableProps) {
               </button>
             </TableCell>
             <TableCell>{track.title}</TableCell>
-            <TableCell className="hidden sm:table-cell">
+            <TableCell className="hidden md:table-cell">
               {getAlbumName(track.albumId)}
             </TableCell>
             <TableCell className="text-right">
