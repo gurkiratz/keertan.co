@@ -8,16 +8,20 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { Track } from '@/hooks/use-library'
+import type { Track, Album } from '@/app/actions'
 import { Play } from 'lucide-react'
 import { useTrackStore } from '@/store/track'
 
 interface TracksTableProps {
   tracks: Track[]
-  getAlbumName: (albumId: string) => string
+  albums: Record<string, Album>
 }
 
-export function TracksTable({ tracks, getAlbumName }: TracksTableProps) {
+export function TracksTable({ tracks, albums }: TracksTableProps) {
+  const getAlbumName = (albumId: string) => {
+    return albums[albumId]?.name || 'Unknown Album'
+  }
+
   const setCurrentTrack = useTrackStore((state) => state.setCurrentTrack)
   const currentTrack = useTrackStore((state) => state.currentTrack)
   const playing = useTrackStore((state) => state.playing)

@@ -1,9 +1,8 @@
 'use server'
 
-import { data as iBroadcastData } from '@/lib/libraryData'
-import { revalidatePath } from 'next/cache'
+// import { data as iBroadcastData } from '@/lib/libraryData'
 
-type Track = {
+export type Track = {
   id: string
   title: string
   duration: number
@@ -11,20 +10,20 @@ type Track = {
   path: string
 }
 
-type Album = {
+export type Album = {
   id: string
   name: string
   tracks: string[]
   artistId: string
 }
 
-type Playlist = {
+export type Playlist = {
   id: string
   name: string
   tracks: string[]
 }
 
-type Library = {
+export type Library = {
   tracks: Record<string, Track>
   albums: Record<string, Album>
   playlists: Record<string, Playlist>
@@ -35,30 +34,33 @@ type Library = {
 }
 
 export async function getLibrary(): Promise<Library> {
-  // const response = await fetch('https://library.ibroadcast.com/`', {
-  //   method: 'POST',
-  //   headers: {
-  //     'Content-Type': 'application/json',
-  //   },
-  //   body: JSON.stringify({
-  //     user_id,
-  //     token,
-  //   }),
-  //   cache: 'force-cache',
-  //   next: {
-  //     revalidate: 60 * 60 * 24 * 15, // 15 days in seconds
-  //   },
-  // })
+  const user_id = process.env.USER_ID
+  const token = process.env.TOKEN
 
-  // console.log('hit api')
+  if (!user_id || !token) {
+    throw new Error('USER_ID and TOKEN must be set in environment variables')
+  }
 
-  // if (!response.ok) {
-  //   throw new Error('Failed to fetch library')
-  // }
+  const response = await fetch('https://library.ibroadcast.com/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      user_id,
+      token,
+    }),
+    cache: 'force-cache',
+    next: {
+      revalidate: 60 * 60 * 24 * 15, // 15 days in seconds
+    },
+  })
 
-  // const data = await response.json()
+  if (!response.ok) {
+    throw new Error('Failed to fetch library')
+  }
 
-  const data = iBroadcastData
+  const data = await response.json()
 
   const tracks: Record<string, Track> = {}
   Object.entries(data.library.tracks).forEach(([id, track]: [string, any]) => {
@@ -101,9 +103,16 @@ export async function getLibrary(): Promise<Library> {
   }
 }
 
-export async function refreshLibrary() {
-  revalidatePath('/')
-  revalidatePath('/tracks')
-  revalidatePath('/albums')
-  revalidatePath('/playlists')
+export async function getStreamUrl(
+  track: Track,
+  library: Library
+): Promise<string> {
+  const user_id = process.env.USER_ID
+  const token = process.env.TOKEN
+
+  if (!user_id || !token) {
+    throw new Error('USER_ID and TOKEN must be set in environment variables')
+  }
+
+  return `${library.settings.streaming_server}${track.path}?Expires=${library.expires}&Signature=${token}&user_id=${user_id}&platform=Web&version=1.0.0`
 }
