@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use server'
 
 // import { data as iBroadcastData } from '@/lib/libraryData'
@@ -72,7 +73,7 @@ export async function getLibrary(): Promise<Library> {
       path: track[16],
     }
   })
-
+  
   const albums: Record<string, Album> = {}
   Object.entries(data.library.albums).forEach(([id, album]: [string, any]) => {
     albums[id] = {
@@ -82,7 +83,7 @@ export async function getLibrary(): Promise<Library> {
       artistId: album[2]?.toString() || '',
     }
   })
-
+  
   const playlists: Record<string, Playlist> = {}
   Object.entries(data.library.playlists).forEach(
     ([id, playlist]: [string, any]) => {

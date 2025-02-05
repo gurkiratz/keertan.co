@@ -16,9 +16,11 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'iBroadcast - Music Player',
+  title: 'Keertan - Music Player',
   description: 'A modern web music player',
 }
+
+export const fetchCache = 'default-cache'
 
 export default async function RootLayout({
   children,
