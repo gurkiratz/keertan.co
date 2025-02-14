@@ -4,15 +4,14 @@ import { useState, useCallback } from 'react'
 import { Menu, Search, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { cn } from '@/lib/utils'
+import Image from 'next/image'
+import { useSidebar } from '@/components/ui/sidebar'
+import Link from 'next/link'
 
-type HeaderProps = {
-  toggleSidebar?: () => void
-}
-
-export function Header({ toggleSidebar }: HeaderProps) {
+export function Header() {
   const [showSearch, setShowSearch] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
+  const { toggleSidebar } = useSidebar()
 
   const handleSearchSubmit = useCallback(
     (e: React.FormEvent) => {
@@ -59,20 +58,26 @@ export function Header({ toggleSidebar }: HeaderProps) {
       )}
 
       {/* Header */}
-      <header className="sticky top-0 z-40 w-full flex justify-center backdrop-blur-sm bg-white/40 dark:bg-gray-900/80 border-b border-gray-200 dark:border-gray-700">
-        <div className="container flex h-14 items-center">
+      <header className="sticky top-0 z-40 w-full pl-2 pr-8 backdrop-blur-sm bg-white dark:bg-gray-900/80 border-b border-gray-200 dark:border-gray-700">
+        <div className="flex h-14 items-center justify-between">
           <Button
             variant="ghost"
             size="icon"
-            className="mr-4"
+            className="mr-4 justify-self-start"
             onClick={toggleSidebar}
           >
-            <Menu className="h-5 w-5" />
+            <Menu className="h-8 w-8" />
           </Button>
 
-          <div className="flex items-center gap-2">
-            <span className="font-semibold text-xl">Keertan</span>
-          </div>
+          <Link href={'/'}>
+            <Image
+              src="/images/keertan-logo.png"
+              alt="Keertan Logo"
+              width={120}
+              height={120}
+              className="rounded-full"
+            />
+          </Link>
 
           {/* Desktop Search */}
           <form

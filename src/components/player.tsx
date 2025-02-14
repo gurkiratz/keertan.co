@@ -75,7 +75,7 @@ export function Player({ library, getStreamUrl }: PlayerProps) {
   }, [])
 
   return currentTrack ? (
-    <div className="fixed bottom-0 left-0 right-0 bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
+    <div className="fixed bottom-0 left-0 right-0 z-50 bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
       <div className="pb-2">
         <div className="relative w-full group">
           <Slider
