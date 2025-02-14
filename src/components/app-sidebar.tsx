@@ -1,5 +1,5 @@
 'use client'
-import { Calendar, Home, Inbox, Search, Settings, X } from 'lucide-react'
+import { Disc, Home, Library, ListMusic, X } from 'lucide-react'
 
 import {
   Sidebar,
@@ -15,37 +15,35 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Button } from './ui/button'
 import { useSidebar } from '@/components/ui/sidebar'
+import { usePathname } from 'next/navigation'
+import { cn } from '@/lib/utils'
 
 // Menu items.
 const items = [
   {
     title: 'Home',
-    url: '/',
+    url: '#',
     icon: Home,
   },
   {
-    title: 'Inbox',
-    url: '#',
-    icon: Inbox,
+    title: 'Tracks',
+    url: '/',
+    icon: ListMusic,
   },
   {
-    title: 'Calendar',
-    url: '#',
-    icon: Calendar,
+    title: 'Playlists',
+    url: '/playlists',
+    icon: Library,
   },
   {
-    title: 'Search',
-    url: '#',
-    icon: Search,
-  },
-  {
-    title: 'Settings',
-    url: '#',
-    icon: Settings,
+    title: 'Albums',
+    url: '/albums',
+    icon: Disc,
   },
 ]
 
 export function AppSidebar() {
+  const pathname = usePathname()
   const { toggleSidebar } = useSidebar()
 
   return (
@@ -75,10 +73,15 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
+                <SidebarMenuItem
+                  key={item.title}
+                  className={cn(
+                    pathname === item.url ? 'bg-gray-200/50 rounded-lg' : ''
+                  )}
+                >
                   <SidebarMenuButton asChild>
                     <a href={item.url} className="space-x-2">
-                      <item.icon />
+                      <item.icon className="text-primary" />
                       <span>{item.title}</span>
                     </a>
                   </SidebarMenuButton>

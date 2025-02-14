@@ -7,17 +7,23 @@ import { Input } from '@/components/ui/input'
 import Image from 'next/image'
 import { useSidebar } from '@/components/ui/sidebar'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import logo from '/public/images/keertan-logo.png'
 
 export function Header() {
   const [showSearch, setShowSearch] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const { toggleSidebar } = useSidebar()
+  const router = useRouter()
 
   const handleSearchSubmit = useCallback(
     (e: React.FormEvent) => {
       e.preventDefault()
-      // Handle search logic here
-      console.log('Search query:', searchQuery)
+      const query = searchQuery.trim()
+      if (query) {
+        router.push(`/search?q=${encodeURIComponent(query)}`)
+      }
+      setShowSearch(false)
     },
     [searchQuery]
   )
@@ -35,13 +41,15 @@ export function Header() {
           />
           <div className="relative w-full bg-white dark:bg-gray-900 p-4 border-b border-gray-200 dark:border-gray-700">
             <form onSubmit={handleSearchSubmit} className="relative">
+              <Search className="absolute left-3 top-2.5 w-4 h-4 text-gray-500 pointer-events-none" />
               <Input
                 type="search"
                 placeholder="Search..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pr-10"
+                className="w-full pl-10 pr-10"
                 autoFocus
+                tabIndex={12}
               />
               <Button
                 type="button"
@@ -58,7 +66,7 @@ export function Header() {
       )}
 
       {/* Header */}
-      <header className="sticky top-0 z-40 w-full pl-2 pr-8 backdrop-blur-sm bg-white dark:bg-gray-900/80 border-b border-gray-200 dark:border-gray-700">
+      <header className="fixed top-0 z-40 w-full pl-2 pr-8 backdrop-blur-sm bg-white dark:bg-gray-900/80 border-b border-gray-200 dark:border-gray-700">
         <div className="flex h-14 items-center justify-between">
           <Button
             variant="ghost"
@@ -66,7 +74,7 @@ export function Header() {
             className="mr-4 justify-self-start"
             onClick={toggleSidebar}
           >
-            <Menu className="h-8 w-8" />
+            <Menu className="h-8 min-w-8" />
           </Button>
 
           <Link href={'/'}>
@@ -75,23 +83,29 @@ export function Header() {
               alt="Keertan Logo"
               width={120}
               height={120}
-              className="rounded-full"
+              className="rounded-full min-w-32"
             />
           </Link>
 
           {/* Desktop Search */}
-          <form
-            onSubmit={handleSearchSubmit}
-            className="hidden md:flex items-center w-full max-w-sm mx-8"
-          >
+          <div className="hidden ml-12 md:flex items-center w-full max-w-sm mx-8 relative">
+            <Search className="absolute left-3 w-4 h-4 text-gray-500 pointer-events-none" />
             <Input
               type="search"
               placeholder="Search..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full"
+              tabIndex={12}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault()
+                  const query = e.currentTarget.value.trim()
+                  if (query) {
+                    router.push(`/search?q=${encodeURIComponent(query)}`)
+                  }
+                }
+              }}
+              className="w-full pl-10"
             />
-          </form>
+          </div>
 
           {/* Mobile Search Button */}
           <Button
@@ -104,7 +118,7 @@ export function Header() {
           </Button>
 
           {/* Quote */}
-          <div className="hidden md:block ml-auto text-2xl text-gray-500 dark:text-gray-400 italic font-punjabiBook">
+          <div className="hidden min-w-[13rem] md:block ml-auto text-2xl text-gray-500 dark:text-gray-400 italic font-punjabiBook">
             {quote}
           </div>
         </div>

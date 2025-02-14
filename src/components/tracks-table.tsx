@@ -1,13 +1,6 @@
 'use client'
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
+import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table'
 import type { Track, Album } from '@/app/actions'
 import { Play } from 'lucide-react'
 import { useTrackStore } from '@/store/track'
@@ -28,24 +21,17 @@ export function TracksTable({ tracks, albums }: TracksTableProps) {
 
   return (
     <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead className="w-[50px]"></TableHead>
-          <TableHead>Title</TableHead>
-          <TableHead className="hidden md:table-cell">Album</TableHead>
-          <TableHead className="text-right">Duration</TableHead>
-        </TableRow>
-      </TableHeader>
       <TableBody>
         {tracks.map((track) => (
-          <TableRow key={track.id}>
+          <TableRow
+            key={track.id}
+            className="border-none cursor-pointer"
+            onClick={() =>
+              currentTrack?.id !== track.id && setCurrentTrack(track)
+            }
+          >
             <TableCell>
-              <button
-                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full relative"
-                onClick={() =>
-                  currentTrack?.id !== track.id && setCurrentTrack(track)
-                }
-              >
+              <button className="p-2  rounded-full relative">
                 {currentTrack?.id === track.id ? (
                   <div className="h-4 flex items-center justify-center gap-[3px]">
                     <div
@@ -69,13 +55,18 @@ export function TracksTable({ tracks, albums }: TracksTableProps) {
                 )}
               </button>
             </TableCell>
-            <TableCell>{track.title}</TableCell>
-            <TableCell className="hidden md:table-cell">
-              {getAlbumName(track.albumId)}
-            </TableCell>
-            <TableCell className="text-right">
-              {Math.floor(track.duration / 60)}:
-              {(track.duration % 60).toString().padStart(2, '0')}
+            <TableCell className="w-full">
+              <div className="flex flex-col">
+                <span className="font-medium">{track.title}</span>
+                <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                  <span>{getAlbumName(track.albumId)}</span>
+                  <span className="mx-2">•</span>
+                  <span>
+                    {Math.floor(track.duration / 60)}:
+                    {(track.duration % 60).toString().padStart(2, '0')}
+                  </span>
+                </div>
+              </div>
             </TableCell>
           </TableRow>
         ))}
