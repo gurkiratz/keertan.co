@@ -1,9 +1,11 @@
 import type { Metadata } from 'next'
+import localFont from 'next/font/local'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { SidebarNav } from '@/components/sidebar-nav'
 import { getLibrary, getStreamUrl } from '@/app/actions'
 import { Player } from '@/components/player'
 import './globals.css'
+import { Header } from '@/components/header'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -13,6 +15,12 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: '--font-geist-mono',
   subsets: ['latin'],
+})
+
+const customFont = localFont({
+  src: '../../public/punjabi-font-book.ttf',
+  display: 'swap',
+  variable: '--font-punjabi-book',
 })
 
 export const metadata: Metadata = {
@@ -32,9 +40,10 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${customFont.variable} antialiased`}
       >
         <div className="min-h-screen flex flex-col">
+          <Header />
           <div className="flex-1 flex pb-16">
             <aside className="hidden lg:block w-64 bg-gray-100 dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700">
               <SidebarNav />
