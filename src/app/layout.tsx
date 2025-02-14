@@ -1,8 +1,7 @@
 import type { Metadata } from 'next'
 import localFont from 'next/font/local'
 import { Geist, Geist_Mono } from 'next/font/google'
-import { SidebarNav } from '@/components/sidebar-nav'
-import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
+import { SidebarProvider } from '@/components/ui/sidebar'
 import { getLibrary, getStreamUrl } from '@/app/actions'
 import { Player } from '@/components/player'
 import './globals.css'
@@ -44,10 +43,10 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${customFont.variable} antialiased`}
       >
-        <SidebarProvider>
-          <div className="min-h-screen flex flex-col">
+        <SidebarProvider defaultOpen={false}>
+          <div className="min-h-screen w-full flex flex-col">
             <Header />
-            <div className="flex-1 flex pb-16">
+            <div className="flex-1 flex py-16">
               <AppSidebar />
               <main className="flex-1 overflow-auto">{children}</main>
             </div>

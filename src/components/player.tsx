@@ -74,7 +74,7 @@ export function Player({ library, getStreamUrl }: PlayerProps) {
     return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`
   }, [])
 
-  return currentTrack ? (
+  return (
     <div className="fixed bottom-0 left-0 right-0 z-50 bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
       <div className="pb-2">
         <div className="relative w-full group">
@@ -133,7 +133,7 @@ export function Player({ library, getStreamUrl }: PlayerProps) {
         </div>
       </div>
     </div>
-  ) : null
+  )
 }
 
 type TrackInfoProps = {
@@ -144,7 +144,7 @@ type TrackInfoProps = {
 
 function TrackInfo({ currentTrack, library, loading }: TrackInfoProps) {
   return (
-    <div className="flex items-center gap-4 order-1 sm:order-2 flex-1 sm:flex-none sm:w-1/3">
+    <div className="flex items-center gap-4 order-1 sm:order-2 flex-1 sm:flex-none sm:w-1/2">
       <div className="min-w-12 min-h-12 bg-gray-200 dark:bg-gray-800 rounded track-pattern">
         {loading && (
           <div className="w-full h-full flex items-center justify-center">

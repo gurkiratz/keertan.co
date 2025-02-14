@@ -1,5 +1,5 @@
 'use client'
-import { Calendar, Home, Inbox, Search, Settings, X } from 'lucide-react'
+import { Disc, Home, Library, ListMusic, X } from 'lucide-react'
 
 import {
   Sidebar,
@@ -24,24 +24,19 @@ const items = [
     icon: Home,
   },
   {
-    title: 'Inbox',
-    url: '#',
-    icon: Inbox,
+    title: 'Tracks',
+    url: '/',
+    icon: ListMusic,
   },
   {
-    title: 'Calendar',
-    url: '#',
-    icon: Calendar,
+    title: 'Playlists',
+    url: '/playlists',
+    icon: Library,
   },
   {
-    title: 'Search',
-    url: '#',
-    icon: Search,
-  },
-  {
-    title: 'Settings',
-    url: '#',
-    icon: Settings,
+    title: 'Albums',
+    url: '/albums',
+    icon: Disc,
   },
 ]
 
