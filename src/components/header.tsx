@@ -91,6 +91,7 @@ export function Header() {
               alt="Keertan Logo"
               width={120}
               height={120}
+              priority
               className="rounded-full min-w-32 hidden sm:block"
             />
           </Link>

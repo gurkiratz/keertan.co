@@ -23,7 +23,7 @@ import { cn } from '@/lib/utils'
 const items = [
   {
     title: 'Home',
-    url: '/',
+    url: '/#',
     icon: Home,
   },
   {
@@ -81,10 +81,10 @@ export function AppSidebar() {
                   )}
                 >
                   <SidebarMenuButton asChild>
-                    <a href={item.url} className="space-x-2">
+                    <Link href={item.url} className="space-x-2">
                       <item.icon className="text-primary" />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}

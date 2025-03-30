@@ -15,40 +15,76 @@ type PlayerProps = {
 
 export function Player({ library, getStreamUrl }: PlayerProps) {
   const [volume, setVolume] = useState(0.8)
-  const [progress, setProgress] = useState(0)
   const currentTrack = useTrackStore((state) => state.currentTrack)
   const playing = useTrackStore((state) => state.playing)
   const setPlaying = useTrackStore((state) => state.setPlaying)
+  const streamUrl = useTrackStore((state) => state.streamUrl)
+  const setStreamUrl = useTrackStore((state) => state.setStreamUrl)
+  const progress = useTrackStore((state) => state.progress)
+  const setProgress = useTrackStore((state) => state.setProgress)
   const [loading, setLoading] = useState(false)
-  const [streamUrl, setStreamUrl] = useState<string | null>(null)
   const playerRef = useRef<ReactPlayer>(null)
+  const previousTrackIdRef = useRef<string | null>(null)
+
+  // Update page title when track changes
+  useEffect(() => {
+    if (currentTrack) {
+      const albumName =
+        library.albums[currentTrack.albumId]?.name || 'Unknown Album'
+      document.title = `${currentTrack.title} - ${albumName} | Keertan`
+    } else {
+      document.title = 'Keertan'
+    }
+  }, [currentTrack, library])
 
   // Reset player state when track changes
   useEffect(() => {
     if (currentTrack) {
-      setLoading(true)
-      setProgress(0)
-      getStreamUrl(currentTrack, library)
-        .then((url) => {
-          setStreamUrl(url)
-          setLoading(false)
-        })
-        .catch((error) => {
-          console.error('Failed to get stream URL:', error)
-          setLoading(false)
-        })
+      const trackChanged = previousTrackIdRef.current !== currentTrack.id
+      if (trackChanged) {
+        setLoading(true)
+        setProgress(0)
+        getStreamUrl(currentTrack, library)
+          .then((url) => {
+            setStreamUrl(url)
+            setLoading(false)
+          })
+          .catch((error) => {
+            console.error('Failed to get stream URL:', error)
+            setLoading(false)
+          })
+        previousTrackIdRef.current = currentTrack.id
+
+        // Set media session metadata
+        if ('mediaSession' in navigator) {
+          navigator.mediaSession.metadata = new MediaMetadata({
+            title: currentTrack.title,
+            artist:
+              library.albums[currentTrack.albumId]?.name || 'Unknown Album',
+            album:
+              library.albums[currentTrack.albumId]?.name || 'Unknown Album',
+            artwork: [
+              {
+                src: '/images/keertan-icon.png',
+                sizes: '512x512',
+                type: 'image/png',
+              },
+            ],
+          })
+        }
+      }
     } else {
       setStreamUrl(null)
+      previousTrackIdRef.current = null
+
+      // Clear media session metadata when no track is playing
+      if ('mediaSession' in navigator) {
+        navigator.mediaSession.metadata = null
+      }
     }
   }, [currentTrack, library, getStreamUrl])
 
-  // Cleanup when component unmounts
-  useEffect(() => {
-    return () => {
-      setPlaying(false)
-      setProgress(0)
-    }
-  }, [setPlaying])
+  // Only cleanup when component unmounts and no track is playing
 
   const handlePlayPause = useCallback(() => {
     if (currentTrack) {
@@ -56,17 +92,23 @@ export function Player({ library, getStreamUrl }: PlayerProps) {
     }
   }, [currentTrack, playing, setPlaying])
 
-  const handleProgress = useCallback(({ played }: { played: number }) => {
-    setProgress(played * 100)
-  }, [])
+  const handleProgress = useCallback(
+    ({ played }: { played: number }) => {
+      setProgress(played * 100)
+    },
+    [setProgress]
+  )
 
-  const handleSliderChange = useCallback((value: number[]) => {
-    if (playerRef.current) {
-      const time = value[0] / 100
-      playerRef.current.seekTo(time)
-      setProgress(value[0])
-    }
-  }, [])
+  const handleSliderChange = useCallback(
+    (value: number[]) => {
+      if (playerRef.current) {
+        const time = value[0] / 100
+        playerRef.current.seekTo(time)
+        setProgress(value[0])
+      }
+    },
+    [setProgress]
+  )
 
   const formatTime = useCallback((seconds: number) => {
     const minutes = Math.floor(seconds / 60)

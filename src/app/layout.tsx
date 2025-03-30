@@ -3,7 +3,7 @@ import localFont from 'next/font/local'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { SidebarProvider } from '@/components/ui/sidebar'
 import { getLibrary, getStreamUrl } from '@/app/actions'
-import { Player } from '@/components/player'
+import { PlayerWrapper } from '@/components/player-wrapper'
 import './globals.css'
 import { Header } from '@/components/header'
 import { AppSidebar } from '@/components/app-sidebar'
@@ -50,7 +50,9 @@ export default async function RootLayout({
               <AppSidebar />
               <main className="flex-1 overflow-auto">{children}</main>
             </div>
-            <Player library={library} getStreamUrl={getStreamUrl} />
+            <div className="fixed bottom-0 left-0 right-0 z-50">
+              <PlayerWrapper library={library} getStreamUrl={getStreamUrl} />
+            </div>
           </div>
         </SidebarProvider>
       </body>
