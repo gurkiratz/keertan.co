@@ -123,11 +123,12 @@ export function Header() {
           {/* Mobile Search Button */}
           <Button
             variant="ghost"
-            size="icon"
-            className="md:hidden ml-auto"
+            size="sm"
+            className="md:hidden ml-auto text-muted-foreground"
             onClick={() => setShowSearch(true)}
           >
             <Search className="h-5 w-5" />
+            Search
           </Button>
 
           {/* Quote */}

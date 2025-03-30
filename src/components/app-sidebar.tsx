@@ -4,6 +4,7 @@ import { Disc, Home, Library, ListMusic, X } from 'lucide-react'
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -22,7 +23,7 @@ import { cn } from '@/lib/utils'
 const items = [
   {
     title: 'Home',
-    url: '#',
+    url: '/',
     icon: Home,
   },
   {
@@ -44,7 +45,7 @@ const items = [
 
 export function AppSidebar() {
   const pathname = usePathname()
-  const { toggleSidebar } = useSidebar()
+  const { toggleSidebar, state } = useSidebar()
 
   return (
     <Sidebar collapsible="icon">
@@ -91,6 +92,21 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      <SidebarFooter>
+        {state === 'expanded' && (
+          <div className="md:-mt-32">
+            Powered by
+            <Link href="https://ibroadcast.com" target="_blank">
+              <Image
+                src="/images/ibroadcast-light.svg"
+                alt="iBroadcast Logo"
+                width={120}
+                height={120}
+              />
+            </Link>
+          </div>
+        )}
+      </SidebarFooter>
     </Sidebar>
   )
 }
