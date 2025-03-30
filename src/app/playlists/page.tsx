@@ -11,21 +11,23 @@ export default async function PlaylistsPage() {
       <h1 className="text-2xl font-bold mb-4">Playlists</h1>
       <Suspense fallback={<Loader />}>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {Object.values(library.playlists).map((playlist) => (
-            <Link key={playlist.id} href={`/playlists/${playlist.id}`}>
-              <Card className="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                <CardHeader>
-                  <CardTitle>{playlist.name}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg mb-2 playlist-pattern" />
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    {playlist.tracks?.length} tracks
-                  </p>
-                </CardContent>
-              </Card>
-            </Link>
-          ))}
+          {Object.values(library.playlists)
+            .slice(0, -1)
+            .map((playlist) => (
+              <Link key={playlist.id} href={`/playlists/${playlist.id}`}>
+                <Card className="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                  <CardHeader>
+                    <CardTitle>{playlist.name}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg mb-2 playlist-pattern" />
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      {playlist.tracks?.length} tracks
+                    </p>
+                  </CardContent>
+                </Card>
+              </Link>
+            ))}
         </div>
       </Suspense>
     </div>
