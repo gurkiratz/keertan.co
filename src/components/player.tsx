@@ -184,8 +184,10 @@ function TrackInfo({ currentTrack, library, loading }: TrackInfoProps) {
         )}
       </div>
       <div>
-        <h3 className="text-sm md:text-base font-medium truncate sm:text-clip max-w-[200px] sm:min-w-full">
-          {currentTrack?.title || 'No track selected'}
+        <h3 className="text-sm md:text-base font-medium w-[200px] sm:w-[300px] lg:w-[500px] overflow-hidden whitespace-nowrap group">
+          <span className="inline-block group-hover:animate-marquee">
+            {currentTrack?.title || 'No track selected'}
+          </span>
         </h3>
         <p className="text-xs text-gray-500 dark:text-gray-400">
           {currentTrack && library?.albums[currentTrack.albumId]?.name}
