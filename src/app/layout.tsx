@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from 'next/font/google'
 import { SidebarProvider } from '@/components/ui/sidebar'
 import { getLibrary, getStreamUrl } from '@/app/actions'
 import { PlayerWrapper } from '@/components/player-wrapper'
+import { TitleManager } from '@/components/title-manager'
 import './globals.css'
 import { Header } from '@/components/header'
 import { AppSidebar } from '@/components/app-sidebar'
@@ -25,8 +26,11 @@ const customFont = localFont({
 })
 
 export const metadata: Metadata = {
-  title: 'Keertan - Music Player',
+  title: 'Keertan',
   description: 'A modern web music player',
+  icons: {
+    icon: '/images/keertan-icon.png',
+  },
 }
 
 export const fetchCache = 'default-cache'
@@ -44,6 +48,7 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${customFont.variable} antialiased`}
       >
         <SidebarProvider defaultOpen={false}>
+          <TitleManager library={library} />
           <div className="min-h-screen w-full flex flex-col">
             <Header />
             <div className="flex-1 flex py-16">

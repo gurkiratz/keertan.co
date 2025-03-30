@@ -26,17 +26,6 @@ export function Player({ library, getStreamUrl }: PlayerProps) {
   const playerRef = useRef<ReactPlayer>(null)
   const previousTrackIdRef = useRef<string | null>(null)
 
-  // Update page title when track changes
-  useEffect(() => {
-    if (currentTrack) {
-      const albumName =
-        library.albums[currentTrack.albumId]?.name || 'Unknown Album'
-      document.title = `${currentTrack.title} - ${albumName} | Keertan`
-    } else {
-      document.title = 'Keertan'
-    }
-  }, [currentTrack, library])
-
   // Reset player state when track changes
   useEffect(() => {
     if (currentTrack) {
