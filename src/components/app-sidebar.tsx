@@ -18,18 +18,19 @@ import { Button } from './ui/button'
 import { useSidebar } from '@/components/ui/sidebar'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 
 // Menu items.
 const items = [
   {
-    title: 'Home',
-    url: '/#',
-    icon: Home,
-  },
-  {
-    title: 'Tracks',
-    url: '/',
-    icon: ListMusic,
+    title: 'Albums',
+    url: '/albums',
+    icon: Disc,
   },
   {
     title: 'Playlists',
@@ -37,9 +38,9 @@ const items = [
     icon: Library,
   },
   {
-    title: 'Albums',
-    url: '/albums',
-    icon: Disc,
+    title: 'Tracks',
+    url: '/',
+    icon: ListMusic,
   },
 ]
 
@@ -82,7 +83,18 @@ export function AppSidebar() {
                 >
                   <SidebarMenuButton asChild>
                     <Link href={item.url} className="space-x-2">
-                      <item.icon className="text-primary" />
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <item.icon className="text-primary" />
+                          </TooltipTrigger>
+                          {state === 'collapsed' && (
+                            <TooltipContent side="right">
+                              {item.title}
+                            </TooltipContent>
+                          )}
+                        </Tooltip>
+                      </TooltipProvider>
                       <span>{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
