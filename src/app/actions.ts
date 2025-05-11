@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use server'
 
 // import { data as iBroadcastData } from '@/lib/libraryData'

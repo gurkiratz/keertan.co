@@ -9,6 +9,9 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        punjabiBook: ['var(--font-punjabi-book)'],
+      },
       colors: {
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
@@ -84,16 +87,32 @@ export default {
           },
         },
         'music-bar-1': {
-          '0%, 100%': { height: '0.75rem' },
-          '50%': { height: '1rem' },
+          '0%, 100%': {
+            height: '0.75rem',
+          },
+          '50%': {
+            height: '1rem',
+          },
         },
         'music-bar-2': {
-          '0%, 100%': { height: '0.5rem' },
-          '50%': { height: '0.75rem' },
+          '0%, 100%': {
+            height: '0.5rem',
+          },
+          '50%': {
+            height: '0.75rem',
+          },
         },
         'music-bar-3': {
-          '0%, 100%': { height: '1rem' },
-          '50%': { height: '1.25rem' },
+          '0%, 100%': {
+            height: '1rem',
+          },
+          '50%': {
+            height: '1.25rem',
+          },
+        },
+        marquee: {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(-100%)' },
         },
       },
       animation: {
@@ -102,6 +121,7 @@ export default {
         'music-bar-1': 'music-bar-1 1s ease-in-out infinite',
         'music-bar-2': 'music-bar-2 1.2s ease-in-out infinite',
         'music-bar-3': 'music-bar-3 0.8s ease-in-out infinite',
+        marquee: 'marquee 20s linear infinite',
       },
     },
   },

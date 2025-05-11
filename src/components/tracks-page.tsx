@@ -7,7 +7,7 @@ async function TracksContent() {
 
   return (
     <TracksTable
-      tracks={Object.values(library.tracks)}
+      tracks={Object.values(library.tracks).slice(0, -1)}
       albums={library.albums}
     />
   )

@@ -1,9 +1,13 @@
 import type { Metadata } from 'next'
+import localFont from 'next/font/local'
 import { Geist, Geist_Mono } from 'next/font/google'
-import { SidebarNav } from '@/components/sidebar-nav'
+import { SidebarProvider } from '@/components/ui/sidebar'
 import { getLibrary, getStreamUrl } from '@/app/actions'
-import { Player } from '@/components/player'
+import { PlayerWrapper } from '@/components/player-wrapper'
+import { TitleManager } from '@/components/title-manager'
 import './globals.css'
+import { Header } from '@/components/header'
+import { AppSidebar } from '@/components/app-sidebar'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -15,10 +19,21 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 })
 
+const customFont = localFont({
+  src: '../../public/punjabi-font-book.ttf',
+  display: 'swap',
+  variable: '--font-punjabi-book',
+})
+
 export const metadata: Metadata = {
-  title: 'iBroadcast - Music Player',
+  title: 'Keertan',
   description: 'A modern web music player',
+  icons: {
+    icon: '/images/keertan-icon.png',
+  },
 }
+
+export const fetchCache = 'default-cache'
 
 export default async function RootLayout({
   children,
@@ -30,22 +45,21 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${customFont.variable} antialiased`}
       >
-        <div className="min-h-screen flex flex-col">
-          <div className="flex-1 flex pb-16">
-            <aside className="hidden lg:block w-64 bg-gray-100 dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700">
-              <SidebarNav />
-            </aside>
-            <main className="flex-1 overflow-auto">
-              <div className="lg:hidden sticky top-0 z-50 bg-white/95 dark:bg-gray-900/95 backdrop-blur supports-[backdrop-filter]:bg-white/75 supports-[backdrop-filter]:dark:bg-gray-900/75 border-b border-gray-200 dark:border-gray-700 p-4">
-                <SidebarNav />
-              </div>
-              {children}
-            </main>
+        <SidebarProvider defaultOpen={false}>
+          <TitleManager library={library} />
+          <div className="min-h-screen w-full flex flex-col">
+            <Header />
+            <div className="flex-1 flex py-16">
+              <AppSidebar />
+              <main className="flex-1 overflow-auto">{children}</main>
+            </div>
+            <div className="fixed bottom-0 left-0 right-0 z-50">
+              <PlayerWrapper library={library} getStreamUrl={getStreamUrl} />
+            </div>
           </div>
-          <Player library={library} getStreamUrl={getStreamUrl} />
-        </div>
+        </SidebarProvider>
       </body>
     </html>
   )
