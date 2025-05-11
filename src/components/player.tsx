@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Play, Pause, SkipBack, SkipForward, Volume2 } from 'lucide-react'
 import { useTrackStore } from '@/store/track'
 import type { Track, Library } from '@/app/actions'
+import Image from 'next/image'
 
 type PlayerProps = {
   library: Library
@@ -174,13 +175,24 @@ type TrackInfoProps = {
 }
 
 function TrackInfo({ currentTrack, library, loading }: TrackInfoProps) {
+  const album = currentTrack ? library.albums[currentTrack.albumId] : null
+  const artworkUrl = album?.artwork_url
+
   return (
     <div className="flex items-center gap-4 order-1 sm:order-2 flex-1 sm:flex-none sm:w-1/2">
-      <div className="min-w-12 min-h-12 bg-gray-200 dark:bg-gray-800 rounded track-pattern">
+      <div className="min-w-12 min-h-12 bg-gray-200 dark:bg-gray-800 rounded track-pattern relative">
         {loading && (
           <div className="w-full h-full flex items-center justify-center">
             <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-900 dark:border-white" />
           </div>
+        )}
+        {artworkUrl && !loading && (
+          <Image
+            src={artworkUrl}
+            alt={album?.name || 'Album artwork'}
+            fill
+            className="object-cover rounded"
+          />
         )}
       </div>
       <div>
