@@ -1,6 +1,8 @@
 import { TracksTable } from '@/components/tracks-table'
 import { getLibrary } from '@/app/actions'
 import { Suspense } from 'react'
+import Image from 'next/image'
+import { Star } from 'lucide-react'
 
 export default async function AlbumPage({
   params,
@@ -13,18 +15,36 @@ export default async function AlbumPage({
   const album = library.albums[id]
   if (!album) return null
 
+  const tracks = album.tracks
+    .map((trackId) => library.tracks[trackId])
+    .filter(Boolean)
+
+  // Calculate total duration of the album
+  const totalDuration = tracks.reduce((acc, track) => acc + track.duration, 0)
+
   return (
     <div className="p-6">
       <Suspense fallback={<Loader />}>
-        <h1 className="text-2xl font-bold mb-4">{album.name}</h1>
-        <TracksTable
-          tracks={album.tracks
-            .map((trackId) => library.tracks[trackId])
-            .filter(Boolean)}
-            albums={library.albums}
-        />
+        <div className="flex gap-8 mb-8">
+          <div className="relative w-48 h-48 bg-gray-200 rounded-lg overflow-hidden">
+            <Image
+              src={album.artwork_url || '/images/unknown-album.jpg'}
+              alt={album.name}
+              fill
+              className="object-cover"
+            />
+          </div>
+          <div className="flex flex-col justify-end pb-4">
+            <h1 className="text-5xl font-bold mb-4">{album.name}</h1>
+            <div className="text-lg text-gray-600 dark:text-gray-400">
+              <p>
+                {tracks.length} tracks, {formatDuration(totalDuration)}
+              </p>
+            </div>
+          </div>
+        </div>
+        <TracksTable tracks={tracks} albums={library.albums} />
       </Suspense>
-
     </div>
   )
 }
@@ -35,4 +55,20 @@ const Loader = () => {
       <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 dark:border-white" />
     </div>
   )
+}
+
+function formatDuration(seconds: number) {
+  const hours = Math.floor(seconds / 3600)
+  const minutes = Math.floor((seconds % 3600) / 60)
+  const remainingSeconds = seconds % 60
+
+  if (hours > 0) {
+    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(
+      2,
+      '0'
+    )}:${String(remainingSeconds).padStart(2, '0')}`
+  }
+  return `${String(minutes).padStart(2, '0')}:${String(
+    remainingSeconds
+  ).padStart(2, '0')}`
 }

@@ -16,6 +16,10 @@ export type Album = {
   name: string
   tracks: string[]
   artistId: string
+  artwork_url?: string
+  year?: number
+  duration?: number
+  artwork_id?: string
 }
 
 export type Playlist = {
@@ -76,11 +80,21 @@ export async function getLibrary(): Promise<Library> {
 
   const albums: Record<string, Album> = {}
   Object.entries(data.library.albums).forEach(([id, album]: [string, any]) => {
+    // Get the first track of the album to get its artwork_id
+    const firstTrackId = album[1]?.[0]
+
+    const firstTrack = firstTrackId ? data.library.tracks[firstTrackId] : null
+
+    const artwork_id = firstTrack ? firstTrack[6]?.toString() : undefined
+
     albums[id] = {
       id,
       name: album[0],
       tracks: album[1],
       artistId: album[2]?.toString() || '',
+      artwork_url: artwork_id
+        ? `https://artwork.ibroadcast.com/artwork/${artwork_id}-500`
+        : undefined,
     }
   })
 
