@@ -8,6 +8,7 @@ import { TitleManager } from '@/components/title-manager'
 import './globals.css'
 import { Header } from '@/components/header'
 import { AppSidebar } from '@/components/app-sidebar'
+import { NowPlayingClient } from '@/components/now-playing-client'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -54,6 +55,9 @@ export default async function RootLayout({
             <div className="flex-1 flex py-16">
               <AppSidebar />
               <main className="flex-1 overflow-auto">{children}</main>
+              <div className="hidden lg:block mr-8">
+                <NowPlayingClient library={library} />
+              </div>
             </div>
             <div className="fixed bottom-0 left-0 right-0 z-50">
               <PlayerWrapper library={library} getStreamUrl={getStreamUrl} />

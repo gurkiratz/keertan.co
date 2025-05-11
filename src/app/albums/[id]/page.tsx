@@ -25,18 +25,21 @@ export default async function AlbumPage({
   return (
     <div className="p-6">
       <Suspense fallback={<Loader />}>
-        <div className="flex gap-8 mb-8">
+        <div className="flex flex-col sm:flex-row items-center gap-8 mb-8">
           <div className="relative w-48 h-48 bg-gray-200 rounded-lg overflow-hidden">
             <Image
               src={album.artwork_url || '/images/unknown-album.jpg'}
               alt={album.name}
               fill
+              sizes="(max-width: 768px) 100vw, 400px"
               className="object-cover"
             />
           </div>
-          <div className="flex flex-col justify-end pb-4">
-            <h1 className="text-5xl font-bold mb-4">{album.name}</h1>
-            <div className="text-lg text-gray-600 dark:text-gray-400">
+          <div className="flex flex-col items-center sm:items-start justify-end pb-4">
+            <h1 className="text-3xl md:text-5xl font-bold mb-4">
+              {album.name}
+            </h1>
+            <div className="text-sm md:text-lg text-gray-600 dark:text-gray-400">
               <p>
                 {tracks.length} tracks, {formatDuration(totalDuration)}
               </p>
