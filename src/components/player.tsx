@@ -27,6 +27,53 @@ export function Player({ library, getStreamUrl }: PlayerProps) {
   const playerRef = useRef<ReactPlayer>(null)
   const previousTrackIdRef = useRef<string | null>(null)
 
+  // Add keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Don't trigger shortcuts if user is typing in an input
+      if (
+        e.target instanceof HTMLInputElement ||
+        e.target instanceof HTMLTextAreaElement
+      ) {
+        return
+      }
+
+      switch (e.key) {
+        case ' ': // Space
+          e.preventDefault() // Prevent page scroll
+          if (currentTrack) {
+            setPlaying(!playing)
+          }
+          break
+        case 'ArrowLeft': // Left arrow
+          if (playerRef.current && currentTrack) {
+            const currentTime = playerRef.current.getCurrentTime()
+            playerRef.current.seekTo(Math.max(0, currentTime - 10)) // Seek back 10 seconds
+          }
+          break
+        case 'ArrowRight': // Right arrow
+          if (playerRef.current && currentTrack) {
+            const currentTime = playerRef.current.getCurrentTime()
+            playerRef.current.seekTo(
+              Math.min(currentTrack.duration, currentTime + 10)
+            ) // Seek forward 10 seconds
+          }
+          break
+        case 'ArrowUp': // Up arrow
+          e.preventDefault() // Prevent page scroll
+          setVolume((prev) => Math.min(1, prev + 0.1))
+          break
+        case 'ArrowDown': // Down arrow
+          e.preventDefault() // Prevent page scroll
+          setVolume((prev) => Math.max(0, prev - 0.1))
+          break
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [currentTrack, playing, setPlaying])
+
   // Reset player state when track changes
   useEffect(() => {
     if (currentTrack) {

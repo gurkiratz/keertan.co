@@ -4,13 +4,14 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 - [x] Mobile friendly
 - [x] API Cache/Server render
-- [ ] Artwork for track
-- [ ] Shortcuts to navigate, volume, seek forward and backward,
+- [x] Artwork for track
+- [x] Shortcuts to navigate, volume, seek forward and backward,
 - [x] Search bar
 - [ ] background patterns, theme selections
 - [x] recently played, currently playing
 - [x] store last played, last played's duration, recently played in local history
 - [ ] queue for previous/next track
+- [ ] implement a better track player
 - [ ] login with a code that will give access to the app - early access
 - [ ] signs up on early access - send email via resend with the early access code
 
