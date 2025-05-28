@@ -28,7 +28,7 @@ export default async function AlbumPage({
         <div className="flex gap-8 mb-8">
           <div className="relative w-48 h-48 bg-gray-200 rounded-lg overflow-hidden">
             <Image
-              src={album.artwork_url || '/images/unknown-album.jpg'}
+              src={album.artwork_url || '/images/unknown-album.png'}
               alt={album.name}
               fill
               className="object-cover"
