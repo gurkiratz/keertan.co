@@ -8,6 +8,7 @@ import { Play, Pause, SkipBack, SkipForward, Volume2 } from 'lucide-react'
 import { useTrackStore } from '@/store/track'
 import type { Track, Library } from '@/app/actions'
 import Image from 'next/image'
+import { QueueDrawer } from '@/components/queue-drawer'
 
 type PlayerProps = {
   library: Library
@@ -23,56 +24,12 @@ export function Player({ library, getStreamUrl }: PlayerProps) {
   const setStreamUrl = useTrackStore((state) => state.setStreamUrl)
   const progress = useTrackStore((state) => state.progress)
   const setProgress = useTrackStore((state) => state.setProgress)
+  const queue = useTrackStore((state) => state.queue)
+  const setCurrentTrack = useTrackStore((state) => state.setCurrentTrack)
+  const removeFromQueue = useTrackStore((state) => state.removeFromQueue)
   const [loading, setLoading] = useState(false)
   const playerRef = useRef<ReactPlayer>(null)
   const previousTrackIdRef = useRef<string | null>(null)
-
-  // Add keyboard shortcuts
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // Don't trigger shortcuts if user is typing in an input
-      if (
-        e.target instanceof HTMLInputElement ||
-        e.target instanceof HTMLTextAreaElement
-      ) {
-        return
-      }
-
-      switch (e.key) {
-        case ' ': // Space
-          e.preventDefault() // Prevent page scroll
-          if (currentTrack) {
-            setPlaying(!playing)
-          }
-          break
-        case 'ArrowLeft': // Left arrow
-          if (playerRef.current && currentTrack) {
-            const currentTime = playerRef.current.getCurrentTime()
-            playerRef.current.seekTo(Math.max(0, currentTime - 10)) // Seek back 10 seconds
-          }
-          break
-        case 'ArrowRight': // Right arrow
-          if (playerRef.current && currentTrack) {
-            const currentTime = playerRef.current.getCurrentTime()
-            playerRef.current.seekTo(
-              Math.min(currentTrack.duration, currentTime + 10)
-            ) // Seek forward 10 seconds
-          }
-          break
-        case 'ArrowUp': // Up arrow
-          e.preventDefault() // Prevent page scroll
-          setVolume((prev) => Math.min(1, prev + 0.1))
-          break
-        case 'ArrowDown': // Down arrow
-          e.preventDefault() // Prevent page scroll
-          setVolume((prev) => Math.max(0, prev - 0.1))
-          break
-      }
-    }
-
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [currentTrack, playing, setPlaying])
 
   // Reset player state when track changes
   useEffect(() => {
@@ -153,6 +110,92 @@ export function Player({ library, getStreamUrl }: PlayerProps) {
     return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`
   }, [])
 
+  // Handle next track
+  const handleNextTrack = useCallback(() => {
+    if (queue.length > 0) {
+      const nextTrack = queue[0]
+      setCurrentTrack(nextTrack)
+      removeFromQueue(nextTrack.id)
+    } else {
+      // No more tracks in queue, stop playing
+      setCurrentTrack(null)
+      setPlaying(false)
+    }
+  }, [queue, setCurrentTrack, removeFromQueue, setPlaying])
+
+  // Handle previous track (for now, just restart current track)
+  const handlePreviousTrack = useCallback(() => {
+    if (playerRef.current) {
+      playerRef.current.seekTo(0)
+      setProgress(0)
+    }
+  }, [setProgress])
+
+  // Handle track end - auto advance to next track
+  const handleTrackEnd = useCallback(() => {
+    handleNextTrack()
+  }, [handleNextTrack])
+
+  // Add keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Don't trigger shortcuts if user is typing in an input
+      if (
+        e.target instanceof HTMLInputElement ||
+        e.target instanceof HTMLTextAreaElement
+      ) {
+        return
+      }
+
+      switch (e.key) {
+        case ' ': // Space
+          e.preventDefault() // Prevent page scroll
+          if (currentTrack) {
+            setPlaying(!playing)
+          }
+          break
+        case 'ArrowLeft': // Left arrow
+          if (playerRef.current && currentTrack) {
+            const currentTime = playerRef.current.getCurrentTime()
+            // If we're near the beginning (< 3 seconds), go to previous track
+            if (currentTime < 3) {
+              handlePreviousTrack()
+            } else {
+              // Otherwise, seek back 10 seconds
+              playerRef.current.seekTo(Math.max(0, currentTime - 10))
+            }
+          }
+          break
+        case 'ArrowRight': // Right arrow
+          if (playerRef.current && currentTrack) {
+            const currentTime = playerRef.current.getCurrentTime()
+            const timeRemaining = currentTrack.duration - currentTime
+            // If we're near the end (< 10 seconds), go to next track
+            if (timeRemaining < 10) {
+              handleNextTrack()
+            } else {
+              // Otherwise, seek forward 10 seconds
+              playerRef.current.seekTo(
+                Math.min(currentTrack.duration, currentTime + 10)
+              )
+            }
+          }
+          break
+        case 'ArrowUp': // Up arrow
+          e.preventDefault() // Prevent page scroll
+          setVolume((prev) => Math.min(1, prev + 0.1))
+          break
+        case 'ArrowDown': // Down arrow
+          e.preventDefault() // Prevent page scroll
+          setVolume((prev) => Math.max(0, prev - 0.1))
+          break
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [currentTrack, playing, setPlaying, handleNextTrack, handlePreviousTrack])
+
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
       <div className="pb-2">
@@ -194,7 +237,11 @@ export function Player({ library, getStreamUrl }: PlayerProps) {
             playing={playing}
             progress={progress}
             handlePlayPause={handlePlayPause}
+            handleNextTrack={handleNextTrack}
+            handlePreviousTrack={handlePreviousTrack}
             formatTime={formatTime}
+            library={library}
+            queue={queue}
           />
           <VolumeControl volume={volume} setVolume={setVolume} />
           {streamUrl && (
@@ -207,6 +254,7 @@ export function Player({ library, getStreamUrl }: PlayerProps) {
               onProgress={handleProgress}
               onReady={() => setLoading(false)}
               onError={() => setLoading(false)}
+              onEnded={handleTrackEnd}
             />
           )}
         </div>
@@ -262,7 +310,11 @@ type ControlsProps = {
   playing: boolean
   progress: number
   handlePlayPause: () => void
+  handleNextTrack: () => void
+  handlePreviousTrack: () => void
   formatTime: (seconds: number) => string
+  library: Library
+  queue: Track[]
 }
 
 function Controls({
@@ -270,7 +322,11 @@ function Controls({
   playing,
   progress,
   handlePlayPause,
+  handleNextTrack,
+  handlePreviousTrack,
   formatTime,
+  library,
+  queue,
 }: ControlsProps) {
   return (
     <div className="flex items-center gap-4 order-2 sm:order-1">
@@ -278,9 +334,12 @@ function Controls({
         variant="ghost"
         size="icon"
         className="w-8 h-8 hidden sm:inline-flex"
+        onClick={handlePreviousTrack}
+        disabled={!currentTrack}
       >
         <SkipBack className="w-4 h-4" />
       </Button>
+      <QueueDrawer library={library} className="sm:hidden" />
       <Button
         variant="ghost"
         size="icon"
@@ -290,9 +349,16 @@ function Controls({
       >
         {playing ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
       </Button>
-      <Button variant="ghost" size="icon" className="w-8 h-8">
+      <Button
+        variant="ghost"
+        size="icon"
+        className="w-8 h-8"
+        onClick={handleNextTrack}
+        disabled={!currentTrack && queue.length === 0}
+      >
         <SkipForward className="w-4 h-4" />
       </Button>
+      <QueueDrawer library={library} className="hidden sm:inline-flex" />
       <div className="hidden md:flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
         <span>
           {currentTrack
