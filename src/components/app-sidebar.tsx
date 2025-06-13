@@ -49,7 +49,7 @@ export function AppSidebar() {
   const { toggleSidebar, state } = useSidebar()
 
   return (
-    <Sidebar collapsible="icon">
+    <Sidebar collapsible="icon" className="hidden md:flex">
       <SidebarContent className="md:mt-14">
         <SidebarGroup>
           <SidebarGroupLabel className="-ml-2 mt-1 mb-4 md:hidden">

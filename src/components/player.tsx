@@ -200,7 +200,7 @@ export function Player({ library, getStreamUrl }: PlayerProps) {
   }, [currentTrack, playing, setPlaying, handleNextTrack, handlePreviousTrack])
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
+    <div className="bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
       <div className="pb-2">
         <div className="relative w-full group">
           <Slider
@@ -277,7 +277,7 @@ function TrackInfo({ currentTrack, library, loading }: TrackInfoProps) {
   const artworkUrl = album?.artwork_url
 
   return (
-    <div className="flex items-center gap-4 order-1 sm:order-2 flex-1 sm:flex-none sm:w-1/2">
+    <div className="flex items-center gap-4 order-1 sm:order-2 flex-1 md:flex-none md:w-1/2">
       <div className="min-w-12 min-h-12 bg-gray-200 dark:bg-gray-800 rounded track-pattern relative">
         {loading && (
           <div className="w-full h-full flex items-center justify-center">
