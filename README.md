@@ -36,8 +36,9 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ### UI
 
-- [ ] Mobile devices, touch doesn't work right to seek track. need a better slider. the problem is i think it doesn't have enough height
+- [x] Mobile devices, touch doesn't work right to seek track. need a better slider.
 - [x] Tabs under the player rather than sidebar
+- [ ] Show music controls in the queue now playing
 
 ## Getting Started
 

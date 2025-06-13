@@ -204,7 +204,7 @@ export function Player({ library, getStreamUrl }: PlayerProps) {
       <div className="pb-2 md:pb-2">
         <div className="relative w-full group">
           {/* Mobile-friendly touch area */}
-          <div className="md:hidden px-4 py-1">
+          <div className="md:hidden px-4 py-1 pt-3">
             <Slider
               className="w-full cursor-pointer"
               thumbClassname="block h-5 w-2 shadow-md border-0 bg-primary rounded-md transition-all duration-200 hover:scale-110 active:scale-105"
@@ -312,12 +312,12 @@ function TrackInfo({ currentTrack, library, loading }: TrackInfoProps) {
         )}
       </div>
       <div className="min-w-0 flex-1">
-        <h3 className="text-xs md:text-base font-medium w-[140px] sm:w-[200px] md:w-[300px] lg:w-[500px] overflow-hidden whitespace-nowrap group">
+        <h3 className="text-xs md:text-base font-medium w-[140px] sm:w-[90%] md:w-[300px] lg:w-[500px] overflow-hidden whitespace-nowrap group">
           <span className="inline-block group-hover:animate-marquee">
             {currentTrack?.title || 'No track selected'}
           </span>
         </h3>
-        <p className="text-[10px] md:text-xs text-gray-500 dark:text-gray-400 truncate w-[140px] sm:w-[200px] md:w-[300px]">
+        <p className="text-xs md:text-sm text-gray-500 dark:text-gray-400 truncate w-[140px] sm:w-[200px] md:w-[300px]">
           {currentTrack && library?.albums[currentTrack.albumId]?.name}
         </p>
       </div>
