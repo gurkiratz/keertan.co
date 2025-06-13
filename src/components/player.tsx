@@ -27,6 +27,9 @@ export function Player({ library, getStreamUrl }: PlayerProps) {
   const queue = useTrackStore((state) => state.queue)
   const setCurrentTrack = useTrackStore((state) => state.setCurrentTrack)
   const removeFromQueue = useTrackStore((state) => state.removeFromQueue)
+  const moveCurrentToEndOfQueue = useTrackStore(
+    (state) => state.moveCurrentToEndOfQueue
+  )
   const [loading, setLoading] = useState(false)
   const playerRef = useRef<ReactPlayer>(null)
   const previousTrackIdRef = useRef<string | null>(null)
@@ -115,13 +118,13 @@ export function Player({ library, getStreamUrl }: PlayerProps) {
     if (queue.length > 0) {
       const nextTrack = queue[0]
       setCurrentTrack(nextTrack)
-      removeFromQueue(nextTrack.id)
+      moveCurrentToEndOfQueue()
     } else {
       // No more tracks in queue, stop playing
       setCurrentTrack(null)
       setPlaying(false)
     }
-  }, [queue, setCurrentTrack, removeFromQueue, setPlaying])
+  }, [queue, setCurrentTrack, moveCurrentToEndOfQueue, setPlaying])
 
   // Handle previous track (for now, just restart current track)
   const handlePreviousTrack = useCallback(() => {
@@ -379,7 +382,7 @@ type VolumeControlProps = {
 
 function VolumeControl({ volume, setVolume }: VolumeControlProps) {
   return (
-    <div className="hidden sm:flex items-center justify-self-end sm:ml-auto md:ml-0 gap-2 order-3">
+    <div className="hidden md:flex items-center justify-self-end sm:ml-auto md:ml-0 gap-2 order-3">
       <Volume2 className="w-4 h-4" />
       <Slider
         className="w-24"

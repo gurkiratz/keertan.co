@@ -25,6 +25,7 @@ export function QueueDrawer({ library, className }: QueueDrawerProps) {
   const queue = useTrackStore((state) => state.queue)
   const removeFromQueue = useTrackStore((state) => state.removeFromQueue)
   const setCurrentTrack = useTrackStore((state) => state.setCurrentTrack)
+  const setQueue = useTrackStore((state) => state.setQueue)
 
   const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60)
@@ -32,10 +33,14 @@ export function QueueDrawer({ library, className }: QueueDrawerProps) {
     return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`
   }
 
-  const handleTrackClick = (track: Track) => {
+  const handleTrackClick = (track: Track, index: number) => {
     setCurrentTrack(track)
-    // Remove the track from queue since it's now playing
-    removeFromQueue(track.id)
+    // When manually selecting a track from queue, cycle the queue:
+    // Move selected track to current position and rearrange queue
+    const tracksAfter = queue.slice(index + 1)
+    const tracksBefore = queue.slice(0, index)
+    const newQueue = [...tracksAfter, ...tracksBefore]
+    setQueue(newQueue)
   }
 
   return (
@@ -112,7 +117,7 @@ export function QueueDrawer({ library, className }: QueueDrawerProps) {
                     <div
                       key={track.id}
                       className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 group cursor-pointer"
-                      onClick={() => handleTrackClick(track)}
+                      onClick={() => handleTrackClick(track, index)}
                     >
                       <div className="w-8 text-center text-sm text-gray-400">
                         {index + 1}

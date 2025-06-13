@@ -23,9 +23,11 @@ export function TracksTable({ tracks, albums }: TracksTableProps) {
   const handleTrackClick = (selectedTrack: Track, index: number) => {
     if (currentTrack?.id !== selectedTrack.id) {
       setCurrentTrack(selectedTrack)
-      // Add remaining tracks to queue (tracks after the selected one)
-      const remainingTracks = tracks.slice(index + 1)
-      setQueue(remainingTracks)
+      // Create a cycling queue: tracks after selected track + tracks before selected track
+      const tracksAfter = tracks.slice(index + 1)
+      const tracksBefore = tracks.slice(0, index)
+      const cyclingQueue = [...tracksAfter, ...tracksBefore]
+      setQueue(cyclingQueue)
     }
   }
 

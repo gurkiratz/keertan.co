@@ -16,6 +16,7 @@ type TrackStore = {
   addToQueue: (track: Track) => void
   removeFromQueue: (trackId: string) => void
   clearQueue: () => void
+  moveCurrentToEndOfQueue: () => void
 }
 
 export const useTrackStore = create<TrackStore>()(
@@ -38,6 +39,14 @@ export const useTrackStore = create<TrackStore>()(
           queue: state.queue.filter((t) => t.id !== trackId),
         })),
       clearQueue: () => set({ queue: [] }),
+      moveCurrentToEndOfQueue: () =>
+        set((state) => {
+          if (state.queue.length > 0) {
+            const [firstTrack, ...restOfQueue] = state.queue
+            return { queue: [...restOfQueue, firstTrack] }
+          }
+          return state
+        }),
     }),
     {
       name: 'track-store',
