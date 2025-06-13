@@ -9,7 +9,7 @@ import { useSidebar } from '@/components/ui/sidebar'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import logo from '/public/images/keertan-logo.png'
-import keertanIcon from '/public/images/keertan-icon.png'
+import keertanIcon from '../../public/images/keertan-icon.png'
 
 export function Header() {
   const [showSearch, setShowSearch] = useState(false)

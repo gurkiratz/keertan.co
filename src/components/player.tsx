@@ -238,6 +238,7 @@ function TrackInfo({ currentTrack, library, loading }: TrackInfoProps) {
             src={artworkUrl}
             alt={album?.name || 'Album artwork'}
             fill
+            sizes="(max-width: 48px) 100vw"
             className="object-cover rounded"
           />
         )}
