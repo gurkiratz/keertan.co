@@ -8,6 +8,7 @@ import { TitleManager } from '@/components/title-manager'
 import './globals.css'
 import { Header } from '@/components/header'
 import { AppSidebar } from '@/components/app-sidebar'
+import { MobileTabs } from '@/components/mobile-tabs'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -53,11 +54,14 @@ export default async function RootLayout({
             <Header />
             <div className="flex-1 flex py-16">
               <AppSidebar />
-              <main className="flex-1 overflow-auto">{children}</main>
+              <main className="flex-1 overflow-auto pb-24 md:pb-0">
+                {children}
+              </main>
             </div>
-            <div className="fixed bottom-0 left-0 right-0 z-50">
+            <div className="fixed bottom-16 md:bottom-0 left-0 right-0 z-50">
               <PlayerWrapper library={library} getStreamUrl={getStreamUrl} />
             </div>
+            <MobileTabs />
           </div>
         </SidebarProvider>
       </body>

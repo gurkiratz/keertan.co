@@ -72,7 +72,7 @@ export function Header() {
           <Button
             variant="ghost"
             size="icon"
-            className="mr-4 justify-self-start"
+            className="mr-4 justify-self-start hidden md:inline-flex"
             onClick={toggleSidebar}
           >
             <Menu className="h-8 min-w-8" />

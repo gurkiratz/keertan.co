@@ -34,6 +34,12 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 - [ ] Queue history view -->
 <!-- - [ ] Auto-queue similar tracks based on genre/mood -->
 
+### UI
+
+- [x] Mobile devices, touch doesn't work right to seek track. need a better slider.
+- [x] Tabs under the player rather than sidebar
+- [ ] Show music controls in the queue now playing
+
 ## Getting Started
 
 First, run the development server:
