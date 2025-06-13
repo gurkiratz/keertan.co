@@ -201,31 +201,48 @@ export function Player({ library, getStreamUrl }: PlayerProps) {
 
   return (
     <div className="bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
-      <div className="pb-2">
+      <div className="pb-2 md:pb-2">
         <div className="relative w-full group">
-          <Slider
-            className="w-full cursor-pointer"
-            thumbClassname="hidden group-hover:block"
-            trackClassname="rounded-none h-1 group-hover:h-1.5"
-            value={[progress]}
-            max={100}
-            step={1}
-            onValueChange={handleSliderChange}
-            onMouseMove={(e) => {
-              if (currentTrack) {
-                const rect = e.currentTarget.getBoundingClientRect()
-                const pos =
-                  ((e.clientX - rect.left) / rect.width) * currentTrack.duration
-                const tooltip = e.currentTarget
-                  .nextElementSibling as HTMLDivElement
-                if (tooltip) {
-                  tooltip.style.left = `${e.clientX - rect.left}px`
-                  tooltip.textContent = formatTime(pos)
+          {/* Mobile-friendly touch area */}
+          <div className="md:hidden px-4 py-1">
+            <Slider
+              className="w-full cursor-pointer"
+              thumbClassname="block h-5 w-2 shadow-md border-0 bg-primary rounded-md transition-all duration-200 hover:scale-110 active:scale-105"
+              trackClassname="rounded-full h-1 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700"
+              value={[progress]}
+              max={100}
+              step={1}
+              onValueChange={handleSliderChange}
+            />
+          </div>
+
+          {/* Desktop hover-based slider */}
+          <div className="hidden md:block">
+            <Slider
+              className="w-full cursor-pointer"
+              thumbClassname="hidden group-hover:block transition-all duration-200"
+              trackClassname="rounded-none h-1 group-hover:h-1.5 transition-all duration-200"
+              value={[progress]}
+              max={100}
+              step={1}
+              onValueChange={handleSliderChange}
+              onMouseMove={(e) => {
+                if (currentTrack) {
+                  const rect = e.currentTarget.getBoundingClientRect()
+                  const pos =
+                    ((e.clientX - rect.left) / rect.width) *
+                    currentTrack.duration
+                  const tooltip = e.currentTarget
+                    .nextElementSibling as HTMLDivElement
+                  if (tooltip) {
+                    tooltip.style.left = `${e.clientX - rect.left}px`
+                    tooltip.textContent = formatTime(pos)
+                  }
                 }
-              }
-            }}
-          />
-          <div className="absolute top-[-25px] transform -translate-x-1/2 bg-gray-800 dark:bg-gray-100 text-white dark:text-gray-900 px-2 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+              }}
+            />
+            <div className="absolute top-[-25px] transform -translate-x-1/2 bg-gray-800 dark:bg-gray-100 text-white dark:text-gray-900 px-2 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+          </div>
         </div>
       </div>
       <div className="flex flex-col w-full">
@@ -277,8 +294,8 @@ function TrackInfo({ currentTrack, library, loading }: TrackInfoProps) {
   const artworkUrl = album?.artwork_url
 
   return (
-    <div className="flex items-center gap-4 order-1 sm:order-2 flex-1 md:flex-none md:w-1/2">
-      <div className="min-w-12 min-h-12 bg-gray-200 dark:bg-gray-800 rounded track-pattern relative">
+    <div className="flex items-center gap-2 md:gap-4 order-1 sm:order-2 flex-1 md:flex-none md:w-1/2">
+      <div className="min-w-10 min-h-10 md:min-w-12 md:min-h-12 bg-gray-200 dark:bg-gray-800 rounded track-pattern relative">
         {loading && (
           <div className="w-full h-full flex items-center justify-center">
             <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-900 dark:border-white" />
@@ -294,13 +311,13 @@ function TrackInfo({ currentTrack, library, loading }: TrackInfoProps) {
           />
         )}
       </div>
-      <div>
-        <h3 className="text-sm md:text-base font-medium w-[200px] sm:w-[300px] lg:w-[500px] overflow-hidden whitespace-nowrap group">
+      <div className="min-w-0 flex-1">
+        <h3 className="text-xs md:text-base font-medium w-[140px] sm:w-[200px] md:w-[300px] lg:w-[500px] overflow-hidden whitespace-nowrap group">
           <span className="inline-block group-hover:animate-marquee">
             {currentTrack?.title || 'No track selected'}
           </span>
         </h3>
-        <p className="text-xs text-gray-500 dark:text-gray-400">
+        <p className="text-[10px] md:text-xs text-gray-500 dark:text-gray-400 truncate w-[140px] sm:w-[200px] md:w-[300px]">
           {currentTrack && library?.albums[currentTrack.albumId]?.name}
         </p>
       </div>
