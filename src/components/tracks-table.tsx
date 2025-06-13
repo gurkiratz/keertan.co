@@ -18,17 +18,27 @@ export function TracksTable({ tracks, albums }: TracksTableProps) {
   const setCurrentTrack = useTrackStore((state) => state.setCurrentTrack)
   const currentTrack = useTrackStore((state) => state.currentTrack)
   const playing = useTrackStore((state) => state.playing)
+  const setQueue = useTrackStore((state) => state.setQueue)
+
+  const handleTrackClick = (selectedTrack: Track, index: number) => {
+    if (currentTrack?.id !== selectedTrack.id) {
+      setCurrentTrack(selectedTrack)
+      // Create a cycling queue: tracks after selected track + tracks before selected track
+      const tracksAfter = tracks.slice(index + 1)
+      const tracksBefore = tracks.slice(0, index)
+      const cyclingQueue = [...tracksAfter, ...tracksBefore]
+      setQueue(cyclingQueue)
+    }
+  }
 
   return (
     <Table>
       <TableBody>
-        {tracks.map((track) => (
+        {tracks.map((track, index) => (
           <TableRow
             key={track.id}
             className="border-none cursor-pointer"
-            onClick={() =>
-              currentTrack?.id !== track.id && setCurrentTrack(track)
-            }
+            onClick={() => handleTrackClick(track, index)}
           >
             <TableCell>
               <button className="p-2  rounded-full relative">

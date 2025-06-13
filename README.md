@@ -15,6 +15,25 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 - [ ] login with a code that will give access to the app - early access
 - [ ] signs up on early access - send email via resend with the early access code
 
+### Queue
+
+- [x] General queue for all tracks
+- [x] Queue for Albums/Playlists
+- [ ] After 1 album finishes, play another album
+- [x] Update previous/next track buttons
+- [x] UI component to view queue
+- [ ] Drag and drop reordering of queue items
+- [x] Option to remove individual tracks from queue
+- [ ] Option to add another track to queue
+
+- [ ] Shuffle queue functionality
+- [ ] Repeat track/album/playlist options
+
+<!-- - [ ] Clear queue option
+- [ ] Save queue as playlist
+- [ ] Queue history view -->
+<!-- - [ ] Auto-queue similar tracks based on genre/mood -->
+
 ## Getting Started
 
 First, run the development server:
