@@ -208,7 +208,7 @@ export function Player({ library, getStreamUrl }: PlayerProps) {
             <Slider
               className="w-full cursor-pointer"
               thumbClassname="block h-5 w-2 shadow-md border-0 bg-primary rounded-md transition-all duration-200 hover:scale-110 active:scale-105"
-              trackClassname="rounded-full h-1 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700"
+              trackClassname="rounded-full h-1 bg-linear-to-r from-gray-200 via-gray-100 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700"
               value={[progress]}
               max={100}
               step={1}

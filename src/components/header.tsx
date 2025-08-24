@@ -37,7 +37,7 @@ export function Header() {
       {showSearch && (
         <div className="fixed inset-0 z-50">
           <div
-            className="absolute inset-0 bg-black/20 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/20 backdrop-blur-xs"
             onClick={() => setShowSearch(false)}
           />
           <div className="relative w-full bg-white dark:bg-gray-900 p-4 border-b border-gray-200 dark:border-gray-700">
@@ -67,7 +67,7 @@ export function Header() {
       )}
 
       {/* Header */}
-      <header className="fixed top-0 z-40 w-full pl-2 pr-8 backdrop-blur-sm bg-white dark:bg-gray-900/80 border-b border-gray-200 dark:border-gray-700">
+      <header className="fixed top-0 z-40 w-full pl-2 pr-8 backdrop-blur-xs bg-white dark:bg-gray-900/80 border-b border-gray-200 dark:border-gray-700">
         <div className="flex h-14 items-center justify-between">
           <Button
             variant="ghost"
@@ -97,7 +97,7 @@ export function Header() {
           </Link>
 
           {/* Mobile Quote */}
-          <div className="md:hidden min-w-[13rem] ml-auto text-2xl text-gray-500 dark:text-gray-400 italic font-punjabiBook">
+          <div className="md:hidden min-w-52 ml-auto text-2xl text-gray-500 dark:text-gray-400 italic font-punjabi-book">
             {quote}
           </div>
 
@@ -133,7 +133,7 @@ export function Header() {
           </Button>
 
           {/* Quote */}
-          <div className="hidden min-w-[13rem] md:block ml-auto text-2xl text-gray-500 dark:text-gray-400 italic font-punjabiBook">
+          <div className="hidden min-w-52 md:block ml-auto text-2xl text-gray-500 dark:text-gray-400 italic font-punjabi-book">
             {quote}
           </div>
         </div>

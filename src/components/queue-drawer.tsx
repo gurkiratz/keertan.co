@@ -68,7 +68,7 @@ export function QueueDrawer({ library, className }: QueueDrawerProps) {
                 Now Playing
               </h3>
               <div className="flex items-center gap-3 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
-                <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-gray-200 dark:bg-gray-800 flex-shrink-0">
+                <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-gray-200 dark:bg-gray-800 shrink-0">
                   {library.albums[currentTrack.albumId]?.artwork_url ? (
                     <Image
                       src={library.albums[currentTrack.albumId].artwork_url!}
@@ -122,7 +122,7 @@ export function QueueDrawer({ library, className }: QueueDrawerProps) {
                       <div className="w-8 text-center text-sm text-gray-400">
                         {index + 1}
                       </div>
-                      <div className="relative w-10 h-10 rounded-md overflow-hidden bg-gray-200 dark:bg-gray-800 flex-shrink-0">
+                      <div className="relative w-10 h-10 rounded-md overflow-hidden bg-gray-200 dark:bg-gray-800 shrink-0">
                         {album?.artwork_url ? (
                           <Image
                             src={album.artwork_url}
