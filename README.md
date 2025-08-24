@@ -44,8 +44,7 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ### Overall music features
 
-- [ ] When pausing on phone, or pausing generally on PC, it should also pause there. Basically more native music experience.
-- [ ] PWA feature
+- [x] When pausing on phone, or pausing generally on PC, it should also pause there. Basically more native music experience.
 
 ## Getting Started
 

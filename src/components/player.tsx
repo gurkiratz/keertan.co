@@ -52,19 +52,45 @@ export function Player({ library, getStreamUrl }: PlayerProps) {
           })
         previousTrackIdRef.current = currentTrack.id
 
-        // Set media session metadata
+        // Enhanced media session metadata with actual album artwork
         if ('mediaSession' in navigator) {
+          const album = library.albums[currentTrack.albumId]
+          const artworkUrl = album?.artwork_url || '/images/keertan-icon.png'
+
           navigator.mediaSession.metadata = new MediaMetadata({
             title: currentTrack.title,
-            artist:
-              library.albums[currentTrack.albumId]?.name || 'Unknown Album',
-            album:
-              library.albums[currentTrack.albumId]?.name || 'Unknown Album',
+            artist: album?.name || 'Unknown Album',
+            album: album?.name || 'Unknown Album',
             artwork: [
               {
-                src: '/images/keertan-icon.png',
+                src: artworkUrl,
+                sizes: '96x96',
+                type: 'image/jpeg',
+              },
+              {
+                src: artworkUrl,
+                sizes: '128x128',
+                type: 'image/jpeg',
+              },
+              {
+                src: artworkUrl,
+                sizes: '192x192',
+                type: 'image/jpeg',
+              },
+              {
+                src: artworkUrl,
+                sizes: '256x256',
+                type: 'image/jpeg',
+              },
+              {
+                src: artworkUrl,
+                sizes: '384x384',
+                type: 'image/jpeg',
+              },
+              {
+                src: artworkUrl,
                 sizes: '512x512',
-                type: 'image/png',
+                type: 'image/jpeg',
               },
             ],
           })
@@ -77,9 +103,90 @@ export function Player({ library, getStreamUrl }: PlayerProps) {
       // Clear media session metadata when no track is playing
       if ('mediaSession' in navigator) {
         navigator.mediaSession.metadata = null
+        navigator.mediaSession.playbackState = 'none'
       }
     }
   }, [currentTrack, library, getStreamUrl])
+
+  // Update Media Session playback state when playing state changes
+  useEffect(() => {
+    if ('mediaSession' in navigator) {
+      if (currentTrack) {
+        navigator.mediaSession.playbackState = playing ? 'playing' : 'paused'
+      } else {
+        navigator.mediaSession.playbackState = 'none'
+      }
+    }
+  }, [playing, currentTrack])
+
+  // Update Media Session position state for native scrubbing support
+  useEffect(() => {
+    if ('mediaSession' in navigator && currentTrack && playerRef.current) {
+      const updatePositionState = () => {
+        try {
+          const currentTime = playerRef.current?.getCurrentTime() || 0
+          navigator.mediaSession.setPositionState({
+            duration: currentTrack.duration,
+            playbackRate: 1.0,
+            position: currentTime,
+          })
+        } catch (error) {
+          // Some browsers may not support setPositionState
+          console.log('Position state not supported:', error)
+        }
+      }
+
+      // Update position state every second when playing
+      let interval: NodeJS.Timeout | null = null
+      if (playing) {
+        updatePositionState() // Update immediately
+        interval = setInterval(updatePositionState, 1000)
+      }
+
+      return () => {
+        if (interval) {
+          clearInterval(interval)
+        }
+      }
+    }
+  }, [playing, currentTrack, progress])
+
+  // Handle page visibility changes for background playback
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if ('mediaSession' in navigator && currentTrack) {
+        // Keep media session active even when page is hidden
+        // This helps maintain system media controls when tab is minimized
+        if (document.hidden && playing) {
+          // Ensure media session knows we're still playing
+          navigator.mediaSession.playbackState = 'playing'
+        }
+      }
+    }
+
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+    }
+  }, [playing, currentTrack])
+
+  // Prevent audio interruption when page loses focus
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      // Clear media session when page is about to unload
+      if ('mediaSession' in navigator) {
+        navigator.mediaSession.metadata = null
+        navigator.mediaSession.playbackState = 'none'
+      }
+    }
+
+    window.addEventListener('beforeunload', handleBeforeUnload)
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload)
+    }
+  }, [])
 
   // Only cleanup when component unmounts and no track is playing
 
@@ -138,6 +245,106 @@ export function Player({ library, getStreamUrl }: PlayerProps) {
   const handleTrackEnd = useCallback(() => {
     handleNextTrack()
   }, [handleNextTrack])
+
+  // Set up Media Session action handlers for native system controls
+  useEffect(() => {
+    if ('mediaSession' in navigator) {
+      // Play action handler
+      navigator.mediaSession.setActionHandler('play', () => {
+        if (currentTrack && !playing) {
+          setPlaying(true)
+        }
+      })
+
+      // Pause action handler
+      navigator.mediaSession.setActionHandler('pause', () => {
+        if (currentTrack && playing) {
+          setPlaying(false)
+        }
+      })
+
+      // Previous track action handler
+      navigator.mediaSession.setActionHandler('previoustrack', () => {
+        handlePreviousTrack()
+      })
+
+      // Next track action handler
+      navigator.mediaSession.setActionHandler('nexttrack', () => {
+        handleNextTrack()
+      })
+
+      // Seek backward action handler (10 seconds)
+      navigator.mediaSession.setActionHandler('seekbackward', (details) => {
+        if (playerRef.current && currentTrack) {
+          const seekOffset = details.seekOffset || 10
+          const currentTime = playerRef.current.getCurrentTime()
+          const newTime = Math.max(0, currentTime - seekOffset)
+          playerRef.current.seekTo(newTime)
+          setProgress((newTime / currentTrack.duration) * 100)
+        }
+      })
+
+      // Seek forward action handler (10 seconds)
+      navigator.mediaSession.setActionHandler('seekforward', (details) => {
+        if (playerRef.current && currentTrack) {
+          const seekOffset = details.seekOffset || 10
+          const currentTime = playerRef.current.getCurrentTime()
+          const newTime = Math.min(
+            currentTrack.duration,
+            currentTime + seekOffset
+          )
+          playerRef.current.seekTo(newTime)
+          setProgress((newTime / currentTrack.duration) * 100)
+        }
+      })
+
+      // Seek to specific position (for native scrubbing)
+      navigator.mediaSession.setActionHandler('seekto', (details) => {
+        if (
+          playerRef.current &&
+          currentTrack &&
+          details.seekTime !== undefined
+        ) {
+          const seekTime = Math.max(
+            0,
+            Math.min(currentTrack.duration, details.seekTime)
+          )
+          playerRef.current.seekTo(seekTime)
+          setProgress((seekTime / currentTrack.duration) * 100)
+        }
+      })
+
+      // Stop action handler
+      navigator.mediaSession.setActionHandler('stop', () => {
+        setCurrentTrack(null)
+        setPlaying(false)
+        setStreamUrl(null)
+      })
+    }
+
+    // Cleanup action handlers when component unmounts
+    return () => {
+      if ('mediaSession' in navigator) {
+        navigator.mediaSession.setActionHandler('play', null)
+        navigator.mediaSession.setActionHandler('pause', null)
+        navigator.mediaSession.setActionHandler('previoustrack', null)
+        navigator.mediaSession.setActionHandler('nexttrack', null)
+        navigator.mediaSession.setActionHandler('seekbackward', null)
+        navigator.mediaSession.setActionHandler('seekforward', null)
+        navigator.mediaSession.setActionHandler('seekto', null)
+        navigator.mediaSession.setActionHandler('stop', null)
+      }
+    }
+  }, [
+    currentTrack,
+    playing,
+    setPlaying,
+    handlePreviousTrack,
+    handleNextTrack,
+    setCurrentTrack,
+    setStreamUrl,
+    setProgress,
+  ])
 
   // Add keyboard shortcuts
   useEffect(() => {
