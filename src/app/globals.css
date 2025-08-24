@@ -211,6 +211,12 @@
   }
 }
 
+@custom-variant standalone {
+  @media (display-mode: standalone) {
+    @slot;
+  }
+}
+
 @layer base {
   * {
     @apply border-border;

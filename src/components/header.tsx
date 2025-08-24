@@ -35,7 +35,7 @@ export function Header() {
     <>
       {/* Mobile Search Modal */}
       {showSearch && (
-        <div className="fixed inset-0 z-50">
+        <div className="fixed inset-0 standalone:mt-16 z-50">
           <div
             className="absolute inset-0 bg-black/20 backdrop-blur-xs"
             onClick={() => setShowSearch(false)}
@@ -67,7 +67,7 @@ export function Header() {
       )}
 
       {/* Header */}
-      <header className="fixed top-0 z-40 w-full pl-2 pr-8 backdrop-blur-xs bg-white dark:bg-gray-900/80 border-b border-gray-200 dark:border-gray-700">
+      <header className="fixed top-0 standalone:pt-16 z-40 w-full pl-2 pr-8 backdrop-blur-lg bg-white/80 dark:bg-gray-900/80 border-b border-gray-200 dark:border-gray-700">
         <div className="flex h-14 items-center justify-between">
           <Button
             variant="ghost"
@@ -138,6 +138,7 @@ export function Header() {
           </div>
         </div>
       </header>
+      <div className="standalone:h-[60px]"></div>
     </>
   )
 }
