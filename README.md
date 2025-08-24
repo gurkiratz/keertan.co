@@ -39,6 +39,13 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 - [x] Mobile devices, touch doesn't work right to seek track. need a better slider.
 - [x] Tabs under the player rather than sidebar
 - [ ] Show music controls in the queue now playing
+- [ ] -10, +10 seconds icons
+- [ ] When searching, show tracks (at most 8, and option to see all), show albums, artists, playlists
+
+### Overall music features
+
+- [ ] When pausing on phone, or pausing generally on PC, it should also pause there. Basically more native music experience.
+- [ ] PWA feature
 
 ## Getting Started
 
