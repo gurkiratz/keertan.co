@@ -23,10 +23,10 @@ export default async function AlbumPage({
   const totalDuration = tracks.reduce((acc, track) => acc + track.duration, 0)
 
   return (
-    <div className="p-6">
+    <div className="p-4 md:p-6">
       <Suspense fallback={<Loader />}>
-        <div className="flex gap-8 mb-8">
-          <div className="relative w-48 h-48 bg-gray-200 rounded-lg overflow-hidden">
+        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 md:gap-8 mb-6 md:mb-8">
+          <div className="relative w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 bg-gray-200 rounded-lg overflow-hidden mx-auto sm:mx-0 shrink-0">
             <Image
               src={album.artwork_url || '/images/unknown-album.png'}
               alt={album.name}
@@ -34,9 +34,11 @@ export default async function AlbumPage({
               className="object-cover"
             />
           </div>
-          <div className="flex flex-col justify-end pb-4">
-            <h1 className="text-5xl font-bold mb-4">{album.name}</h1>
-            <div className="text-lg text-gray-600 dark:text-gray-400">
+          <div className="flex flex-col justify-end pb-2 sm:pb-4 text-center sm:text-left">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-2 md:mb-4 leading-tight">
+              {album.name}
+            </h1>
+            <div className="text-sm sm:text-base md:text-lg text-gray-600 dark:text-gray-400">
               <p>
                 {tracks.length} tracks, {formatDuration(totalDuration)}
               </p>
