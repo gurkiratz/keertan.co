@@ -11,21 +11,25 @@ interface SearchTracksSectionProps {
   query: string
 }
 
-export function SearchTracksSection({ tracks, albums, query }: SearchTracksSectionProps) {
+export function SearchTracksSection({
+  tracks,
+  albums,
+  query,
+}: SearchTracksSectionProps) {
   const [displayCount, setDisplayCount] = useState(10)
-  
+
   const displayedTracks = tracks.slice(0, displayCount)
   const hasMore = tracks.length > displayCount
 
   const handleSeeMore = () => {
-    setDisplayCount(prev => prev + 10)
+    setDisplayCount((prev) => prev + 10)
   }
 
   if (tracks.length === 0) {
     return (
       <div className="mb-8">
         <h2 className="text-lg font-semibold mb-4">Tracks</h2>
-        <p className="text-gray-500 dark:text-gray-400">
+        <p className="text-muted-foreground">
           No tracks found for &apos;{query}&apos;
         </p>
       </div>
@@ -37,16 +41,12 @@ export function SearchTracksSection({ tracks, albums, query }: SearchTracksSecti
       <h2 className="text-lg font-semibold mb-4">
         Tracks ({tracks.length} found)
       </h2>
-      
+
       <TracksTable tracks={displayedTracks} albums={albums} />
-      
+
       {hasMore && (
         <div className="mt-4 flex justify-center">
-          <Button 
-            variant="outline" 
-            onClick={handleSeeMore}
-            className="px-6"
-          >
+          <Button variant="outline" onClick={handleSeeMore} className="px-6">
             See More ({Math.min(10, tracks.length - displayCount)} more)
           </Button>
         </div>

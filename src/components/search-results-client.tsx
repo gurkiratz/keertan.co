@@ -12,13 +12,16 @@ interface SearchResultsClientProps {
 
 function NoResults({ query }: { query: string }) {
   return (
-    <div className="flex items-center justify-center h-full text-gray-500 dark:text-gray-400">
+    <div className="flex items-center justify-center h-full text-muted-foreground">
       No results found for &apos;{query}&apos; in your library
     </div>
   )
 }
 
-export function SearchResultsClient({ library, query }: SearchResultsClientProps) {
+export function SearchResultsClient({
+  library,
+  query,
+}: SearchResultsClientProps) {
   const { tracks, albums } = useSearch(library, query)
 
   const hasResults = tracks.length > 0 || albums.length > 0
@@ -30,7 +33,11 @@ export function SearchResultsClient({ library, query }: SearchResultsClientProps
   return (
     <div className="space-y-8">
       <SearchAlbumsSection albums={albums} query={query} />
-      <SearchTracksSection tracks={tracks} albums={library.albums} query={query} />
+      <SearchTracksSection
+        tracks={tracks}
+        albums={library.albums}
+        query={query}
+      />
     </div>
   )
 }

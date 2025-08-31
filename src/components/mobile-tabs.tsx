@@ -32,11 +32,11 @@ export function MobileTabs() {
       style={{ zIndex: 60 }}
     >
       {/* Background blur overlay with gradient */}
-      <div className="absolute inset-0 bg-linear-to-t from-white/90 via-white/85 to-white/80 dark:from-gray-900/90 dark:via-gray-900/85 dark:to-gray-900/80 backdrop-blur-xl border-t border-gray-200/30 dark:border-gray-700/30" />
+      <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/85 to-background/80 backdrop-blur-xl border-t border-border/30" />
 
       {/* Tab content */}
       <div className="relative flex items-center justify-center px-6 py-2 w-full">
-        <div className="flex items-center justify-around w-full bg-linear-to-r from-gray-100/90 via-gray-50/90 to-gray-100/90 dark:from-gray-800/90 dark:via-gray-700/90 dark:to-gray-800/90 rounded-full p-1 shadow-lg backdrop-blur-xs border border-white/20 dark:border-gray-600/20">
+        <div className="flex items-center justify-around w-full bg-gradient-to-r from-muted/90 via-card/90 to-muted/90 rounded-full p-1 shadow-lg backdrop-blur-xs border border-border/20">
           {items.map((item) => {
             const isActive = pathname === item.url
             return (
@@ -46,8 +46,8 @@ export function MobileTabs() {
                 className={cn(
                   'flex flex-col items-center justify-center flex-1 py-2 px-2 rounded-full transition-all duration-200 ease-in-out relative',
                   isActive
-                    ? 'bg-linear-to-b from-white via-white/95 to-gray-50/90 dark:from-gray-700 dark:via-gray-700/95 dark:to-gray-800/90 text-primary shadow-md border border-white/40 dark:border-gray-600/40'
-                    : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-linear-to-b hover:from-white/60 hover:to-gray-50/40 dark:hover:from-gray-700/60 dark:hover:to-gray-800/40'
+                    ? 'bg-gradient-to-b from-card via-card/95 to-muted/90 text-primary shadow-md border border-border/40'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-gradient-to-b hover:from-card/60 hover:to-muted/40'
                 )}
               >
                 <item.icon
