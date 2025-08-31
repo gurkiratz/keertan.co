@@ -1,17 +1,9 @@
 import { Suspense } from 'react'
 
-import { TracksTable } from '@/components/tracks-table'
+import { SearchResultsClient } from '@/components/search-results-client'
 import { getLibrary } from '../actions'
 
 type SearchParams = Promise<{ q: string | undefined }>
-
-function NoResults({ query }: { query: string }) {
-  return (
-    <div className="flex items-center justify-center h-full text-gray-500 dark:text-gray-400">
-      No results found for &apos;{query}&apos; in your library
-    </div>
-  )
-}
 
 function NoQuery() {
   return (
@@ -24,15 +16,7 @@ function NoQuery() {
 async function SearchResults({ query }: { query: string }) {
   const library = await getLibrary()
 
-  const results = Object.values(library.tracks).filter((track) =>
-    track.title?.toLowerCase().includes(query.toLowerCase())
-  )
-
-  if (results.length === 0) {
-    return <NoResults query={query} />
-  }
-
-  return <TracksTable tracks={results} albums={library.albums} />
+  return <SearchResultsClient library={library} query={query} />
 }
 
 export default async function SearchPage(props: {
