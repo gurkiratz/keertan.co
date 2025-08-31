@@ -54,7 +54,7 @@ export function QueueDrawer({ library, className }: QueueDrawerProps) {
         <SheetHeader>
           <SheetTitle className="flex items-center justify-between">
             <span>Up Next</span>
-            <span className="text-sm font-normal text-gray-500">
+            <span className="text-sm font-normal text-muted-foreground">
               {queue.length} track{queue.length !== 1 ? 's' : ''}
             </span>
           </SheetTitle>
@@ -64,11 +64,11 @@ export function QueueDrawer({ library, className }: QueueDrawerProps) {
           {/* Current Track */}
           {currentTrack && (
             <div className="mb-6">
-              <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
+              <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3">
                 Now Playing
               </h3>
-              <div className="flex items-center gap-3 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
-                <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-gray-200 dark:bg-gray-800 shrink-0">
+              <div className="flex items-center gap-3 p-3 bg-accent/20 rounded-lg border border-accent/30">
+                <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-muted shrink-0">
                   {library.albums[currentTrack.albumId]?.artwork_url ? (
                     <Image
                       src={library.albums[currentTrack.albumId].artwork_url!}
@@ -80,7 +80,7 @@ export function QueueDrawer({ library, className }: QueueDrawerProps) {
                       className="object-cover"
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs">
+                    <div className="w-full h-full flex items-center justify-center text-muted-foreground text-xs">
                       No Art
                     </div>
                   )}
@@ -89,15 +89,15 @@ export function QueueDrawer({ library, className }: QueueDrawerProps) {
                   </div>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="font-medium truncate text-green-700 dark:text-green-300">
+                  <div className="font-medium truncate text-primary">
                     {currentTrack.title}
                   </div>
-                  <div className="text-sm text-green-600 dark:text-green-400 truncate">
+                  <div className="text-sm text-primary/80 truncate">
                     {library.albums[currentTrack.albumId]?.name ||
                       'Unknown Album'}
                   </div>
                 </div>
-                <div className="text-sm text-green-600 dark:text-green-400">
+                <div className="text-sm text-primary/80">
                   {formatTime(currentTrack.duration)}
                 </div>
               </div>
@@ -107,7 +107,7 @@ export function QueueDrawer({ library, className }: QueueDrawerProps) {
           {/* Queue */}
           {queue.length > 0 ? (
             <div>
-              <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
+              <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3">
                 Up Next
               </h3>
               <div className="space-y-2">
@@ -116,13 +116,13 @@ export function QueueDrawer({ library, className }: QueueDrawerProps) {
                   return (
                     <div
                       key={track.id}
-                      className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 group cursor-pointer"
+                      className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50 group cursor-pointer"
                       onClick={() => handleTrackClick(track, index)}
                     >
-                      <div className="w-8 text-center text-sm text-gray-400">
+                      <div className="w-8 text-center text-sm text-muted-foreground">
                         {index + 1}
                       </div>
-                      <div className="relative w-10 h-10 rounded-md overflow-hidden bg-gray-200 dark:bg-gray-800 shrink-0">
+                      <div className="relative w-10 h-10 rounded-md overflow-hidden bg-muted shrink-0">
                         {album?.artwork_url ? (
                           <Image
                             src={album.artwork_url}
@@ -131,7 +131,7 @@ export function QueueDrawer({ library, className }: QueueDrawerProps) {
                             className="object-cover"
                           />
                         ) : (
-                          <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs">
+                          <div className="w-full h-full flex items-center justify-center text-muted-foreground text-xs">
                             No Art
                           </div>
                         )}
@@ -140,11 +140,11 @@ export function QueueDrawer({ library, className }: QueueDrawerProps) {
                         <div className="font-medium truncate">
                           {track.title}
                         </div>
-                        <div className="text-sm text-gray-500 dark:text-gray-400 truncate">
+                        <div className="text-sm text-muted-foreground dark:text-muted-foreground truncate">
                           {album?.name || 'Unknown Album'}
                         </div>
                       </div>
-                      <div className="text-sm text-gray-400">
+                      <div className="text-sm text-muted-foreground">
                         {formatTime(track.duration)}
                       </div>
                       <Button
@@ -165,7 +165,7 @@ export function QueueDrawer({ library, className }: QueueDrawerProps) {
             </div>
           ) : (
             !currentTrack && (
-              <div className="flex flex-col items-center justify-center h-32 text-gray-500">
+              <div className="flex flex-col items-center justify-center h-32 text-muted-foreground">
                 <List className="w-8 h-8 mb-2 opacity-50" />
                 <p>No tracks in queue</p>
                 <p className="text-sm">Add some tracks to get started</p>

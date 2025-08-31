@@ -407,7 +407,7 @@ export function Player({ library, getStreamUrl }: PlayerProps) {
   }, [currentTrack, playing, setPlaying, handleNextTrack, handlePreviousTrack])
 
   return (
-    <div className="bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
+    <div className="bg-muted border-t border-border">
       <div className="pb-2 md:pb-2">
         <div className="relative w-full group">
           {/* Mobile-friendly touch area */}
@@ -415,7 +415,7 @@ export function Player({ library, getStreamUrl }: PlayerProps) {
             <Slider
               className="w-full cursor-pointer"
               thumbClassname="block h-5 w-2 shadow-md border-0 bg-primary rounded-md transition-all duration-200 hover:scale-110 active:scale-105"
-              trackClassname="rounded-full h-1 bg-linear-to-r from-gray-200 via-gray-100 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700"
+              trackClassname="rounded-full h-1"
               value={[progress]}
               max={100}
               step={1}
@@ -448,7 +448,7 @@ export function Player({ library, getStreamUrl }: PlayerProps) {
                 }
               }}
             />
-            <div className="absolute top-[-25px] transform -translate-x-1/2 bg-gray-800 dark:bg-gray-100 text-white dark:text-gray-900 px-2 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+            <div className="absolute top-[-25px] transform -translate-x-1/2 bg-popover text-popover-foreground px-2 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
           </div>
         </div>
       </div>
@@ -502,10 +502,10 @@ function TrackInfo({ currentTrack, library, loading }: TrackInfoProps) {
 
   return (
     <div className="flex items-center gap-2 md:gap-4 order-1 sm:order-2 flex-1 md:flex-none md:w-1/2">
-      <div className="min-w-10 min-h-10 md:min-w-12 md:min-h-12 bg-gray-200 dark:bg-gray-800 rounded track-pattern relative">
+      <div className="min-w-10 min-h-10 md:min-w-12 md:min-h-12 bg-muted rounded track-pattern relative">
         {loading && (
           <div className="w-full h-full flex items-center justify-center">
-            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-900 dark:border-white" />
+            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-foreground" />
           </div>
         )}
         {artworkUrl && !loading && (
@@ -524,7 +524,7 @@ function TrackInfo({ currentTrack, library, loading }: TrackInfoProps) {
             {currentTrack?.title || 'No track selected'}
           </span>
         </h3>
-        <p className="text-xs md:text-sm text-gray-500 dark:text-gray-400 truncate w-[140px] sm:w-[200px] md:w-[300px]">
+        <p className="text-xs md:text-sm text-muted-foreground truncate w-[140px] sm:w-[200px] md:w-[300px]">
           {currentTrack && library?.albums[currentTrack.albumId]?.name}
         </p>
       </div>
@@ -586,7 +586,7 @@ function Controls({
         <SkipForward className="w-4 h-4" />
       </Button>
       <QueueDrawer library={library} className="hidden sm:inline-flex" />
-      <div className="hidden md:flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+      <div className="hidden md:flex items-center gap-2 text-xs text-muted-foreground">
         <span>
           {currentTrack
             ? formatTime((progress / 100) * currentTrack.duration)

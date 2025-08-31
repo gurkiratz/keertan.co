@@ -68,7 +68,7 @@ export function TracksTable({ tracks, albums }: TracksTableProps) {
             <TableCell className="w-full">
               <div className="flex flex-col">
                 <span className="font-medium">{track.title}</span>
-                <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                <div className="flex items-center text-sm text-muted-foreground">
                   <span>{getAlbumName(track.albumId)}</span>
                   <span className="mx-2">•</span>
                   <span>

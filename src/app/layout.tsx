@@ -5,6 +5,7 @@ import { SidebarProvider } from '@/components/ui/sidebar'
 import { getLibrary, getStreamUrl } from '@/app/actions'
 import { PlayerWrapper } from '@/components/player-wrapper'
 import { TitleManager } from '@/components/title-manager'
+import { Providers } from '@/components/providers'
 import './globals.css'
 import { Header } from '@/components/header'
 import { AppSidebar } from '@/components/app-sidebar'
@@ -51,7 +52,7 @@ export default async function RootLayout({
   const library = await getLibrary()
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="manifest" href="/manifest.json" />
         <link
@@ -70,22 +71,24 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${customFont.variable} antialiased`}
       >
-        <SidebarProvider defaultOpen={false}>
-          <TitleManager library={library} />
-          <div className="min-h-screen w-full flex flex-col">
-            <Header />
-            <div className="flex-1 flex py-16">
-              <AppSidebar />
-              <main className="flex-1 overflow-auto pb-24 md:pb-0">
-                {children}
-              </main>
+        <Providers>
+          <SidebarProvider defaultOpen={true}>
+            <TitleManager library={library} />
+            <div className="min-h-screen w-full flex flex-col">
+              <Header />
+              <div className="flex-1 flex py-16">
+                <AppSidebar />
+                <main className="flex-1 overflow-auto pb-24 md:pb-0">
+                  {children}
+                </main>
+              </div>
+              <div className="fixed bottom-16 md:bottom-0 left-0 right-0 z-50">
+                <PlayerWrapper library={library} getStreamUrl={getStreamUrl} />
+              </div>
+              <MobileTabs />
             </div>
-            <div className="fixed bottom-16 md:bottom-0 left-0 right-0 z-50">
-              <PlayerWrapper library={library} getStreamUrl={getStreamUrl} />
-            </div>
-            <MobileTabs />
-          </div>
-        </SidebarProvider>
+          </SidebarProvider>
+        </Providers>
       </body>
     </html>
   )

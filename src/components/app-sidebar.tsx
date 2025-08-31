@@ -1,5 +1,7 @@
 'use client'
 import { Disc, Home, Library, ListMusic, X } from 'lucide-react'
+import { useTheme } from 'next-themes'
+import { useEffect, useState } from 'react'
 
 import {
   Sidebar,
@@ -47,6 +49,13 @@ const items = [
 export function AppSidebar() {
   const pathname = usePathname()
   const { toggleSidebar, state } = useSidebar()
+  const { theme } = useTheme()
+  const [mounted, setMounted] = useState(false)
+
+  // Avoid hydration mismatch
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   return (
     <Sidebar collapsible="icon" className="hidden md:flex">
@@ -62,13 +71,19 @@ export function AppSidebar() {
               <X className="h-8 w-8" />
             </Button>
             <Link href={'/'}>
-              <Image
-                src="/images/keertan-logo.png"
-                alt="Keertan Logo"
-                width={120}
-                height={120}
-                className="rounded-full"
-              />
+              {mounted && (
+                <Image
+                  src={
+                    theme === 'dark'
+                      ? '/images/keertan-logo-dark.png'
+                      : '/images/keertan-logo-light.png'
+                  }
+                  alt="Keertan Logo"
+                  width={120}
+                  height={120}
+                  className="rounded-full"
+                />
+              )}
             </Link>
           </SidebarGroupLabel>
 
@@ -78,7 +93,7 @@ export function AppSidebar() {
                 <SidebarMenuItem
                   key={item.title}
                   className={cn(
-                    pathname === item.url ? 'bg-gray-200/50 rounded-lg' : ''
+                    pathname === item.url ? 'bg-sidebar-accent rounded-lg' : ''
                   )}
                 >
                   <SidebarMenuButton asChild>
@@ -109,12 +124,18 @@ export function AppSidebar() {
           <div className="md:-mt-32">
             Powered by
             <Link href="https://ibroadcast.com" target="_blank">
-              <Image
-                src="/images/ibroadcast-light.svg"
-                alt="iBroadcast Logo"
-                width={120}
-                height={120}
-              />
+              {mounted && (
+                <Image
+                  src={
+                    theme === 'dark'
+                      ? '/images/ibroadcast-dark.svg'
+                      : '/images/ibroadcast-light.svg'
+                  }
+                  alt="iBroadcast Logo"
+                  width={120}
+                  height={120}
+                />
+              )}
             </Link>
           </div>
         )}

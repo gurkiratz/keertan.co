@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
+import { useTheme } from 'next-themes'
 import { Menu, Search, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -8,14 +9,21 @@ import Image from 'next/image'
 import { useSidebar } from '@/components/ui/sidebar'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import logo from '/public/images/keertan-logo.png'
 import keertanIcon from '../../public/images/keertan-icon.png'
+import { ThemeToggle } from '@/components/theme-toggle'
 
 export function Header() {
   const [showSearch, setShowSearch] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const { toggleSidebar } = useSidebar()
   const router = useRouter()
+  const { theme } = useTheme()
+  const [mounted, setMounted] = useState(false)
+
+  // Avoid hydration mismatch
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const handleSearchSubmit = useCallback(
     (e: React.FormEvent) => {
@@ -40,9 +48,9 @@ export function Header() {
             className="absolute inset-0 bg-black/20 backdrop-blur-xs"
             onClick={() => setShowSearch(false)}
           />
-          <div className="relative w-full bg-white dark:bg-gray-900 p-4 border-b border-gray-200 dark:border-gray-700">
+          <div className="relative w-full bg-background p-4 border-b border-border">
             <form onSubmit={handleSearchSubmit} className="relative">
-              <Search className="absolute left-3 top-2.5 w-4 h-4 text-gray-500 pointer-events-none" />
+              <Search className="absolute left-3 top-2.5 w-4 h-4 text-muted-foreground pointer-events-none" />
               <Input
                 type="search"
                 placeholder="Search..."
@@ -67,7 +75,7 @@ export function Header() {
       )}
 
       {/* Header */}
-      <header className="fixed top-0 standalone:pt-16 z-40 w-full pl-2 pr-8 backdrop-blur-lg bg-white/80 dark:bg-gray-900/80 border-b border-gray-200 dark:border-gray-700">
+      <header className="fixed top-0 standalone:pt-16 z-40 w-full pl-2 pr-8 backdrop-blur-lg bg-background/80 border-b border-border">
         <div className="flex h-14 items-center justify-between">
           <Button
             variant="ghost"
@@ -79,31 +87,39 @@ export function Header() {
           </Button>
 
           <Link href={'/'}>
-            <Image
-              src={keertanIcon}
-              alt="Keertan Icon"
-              width={25}
-              height={25}
-              className="rounded-full min-w-12 sm:hidden"
-            />
-            <Image
-              src="/images/keertan-logo.png"
-              alt="Keertan Logo"
-              width={120}
-              height={120}
-              priority
-              className="rounded-full min-w-32 hidden sm:block"
-            />
+            {mounted && (
+              <>
+                <Image
+                  src="/images/keertan-icon.png"
+                  alt="Keertan Icon"
+                  width={25}
+                  height={25}
+                  className="rounded-full min-w-12 sm:hidden"
+                />
+                <Image
+                  src={
+                    theme === 'dark'
+                      ? '/images/keertan-logo-dark.png'
+                      : '/images/keertan-logo-light.png'
+                  }
+                  alt="Keertan Logo"
+                  width={120}
+                  height={120}
+                  priority
+                  className="rounded-full min-w-32 hidden sm:block"
+                />
+              </>
+            )}
           </Link>
 
           {/* Mobile Quote */}
-          <div className="md:hidden min-w-52 ml-auto text-2xl text-gray-500 dark:text-gray-400 italic font-punjabi-book">
+          <div className="md:hidden min-w-52 ml-auto text-2xl text-muted-foreground italic font-punjabi-book">
             {quote}
           </div>
 
           {/* Desktop Search */}
           <div className="hidden ml-12 md:flex items-center w-full max-w-sm mx-8 relative">
-            <Search className="absolute left-3 w-4 h-4 text-gray-500 pointer-events-none" />
+            <Search className="absolute left-3 w-4 h-4 text-muted-foreground pointer-events-none" />
             <Input
               type="search"
               placeholder="Search..."
@@ -133,8 +149,13 @@ export function Header() {
           </Button>
 
           {/* Quote */}
-          <div className="hidden min-w-52 md:block ml-auto text-2xl text-gray-500 dark:text-gray-400 italic font-punjabi-book">
+          <div className="hidden min-w-52 md:block ml-auto text-2xl text-muted-foreground italic font-punjabi-book">
             {quote}
+          </div>
+
+          {/* Theme Toggle */}
+          <div className="ml-4">
+            <ThemeToggle />
           </div>
         </div>
       </header>

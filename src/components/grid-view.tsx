@@ -22,7 +22,7 @@ export function GridView({ title, items, baseUrl }: GridViewProps) {
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 2xl:grid-cols-8 gap-3 md:gap-4 lg:gap-6">
         {items.map((item) => (
           <Link href={`${baseUrl}/${item.id}`} key={item.id} className="group">
-            <div className="cursor-pointer transition-all duration-200 hover:bg-gray-50/50 dark:hover:bg-gray-800/50 rounded-lg p-2 md:p-3 -m-2 md:-m-3">
+            <div className="cursor-pointer transition-all duration-200 hover:bg-muted/50 rounded-lg p-2 md:p-3 -m-2 md:-m-3">
               <div className="space-y-2 md:space-y-3">
                 {/* Album artwork */}
                 <div className="relative w-full aspect-square rounded-md md:rounded-lg overflow-hidden shadow-md group-hover:shadow-xl transition-all duration-200 group-hover:scale-105">

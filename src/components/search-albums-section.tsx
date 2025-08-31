@@ -9,12 +9,15 @@ interface SearchAlbumsSectionProps {
   query: string
 }
 
-export function SearchAlbumsSection({ albums, query }: SearchAlbumsSectionProps) {
+export function SearchAlbumsSection({
+  albums,
+  query,
+}: SearchAlbumsSectionProps) {
   if (albums.length === 0) {
     return (
       <div className="mb-8">
         <h2 className="text-lg font-semibold mb-4">Albums</h2>
-        <p className="text-gray-500 dark:text-gray-400">
+        <p className="text-muted-foreground">
           No albums found for &apos;{query}&apos;
         </p>
       </div>
@@ -26,11 +29,11 @@ export function SearchAlbumsSection({ albums, query }: SearchAlbumsSectionProps)
       <h2 className="text-lg font-semibold mb-4">
         Albums ({albums.length} found)
       </h2>
-      
+
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 gap-3 md:gap-4">
         {albums.map((album) => (
           <Link href={`/albums/${album.id}`} key={album.id} className="group">
-            <div className="cursor-pointer transition-all duration-200 hover:bg-gray-50/50 dark:hover:bg-gray-800/50 rounded-lg p-2 md:p-3 -m-2 md:-m-3">
+            <div className="cursor-pointer transition-all duration-200 hover:bg-muted/50 rounded-lg p-2 md:p-3 -m-2 md:-m-3">
               <div className="space-y-2 md:space-y-3">
                 {/* Album artwork */}
                 <div className="relative w-full aspect-square rounded-md md:rounded-lg overflow-hidden shadow-md group-hover:shadow-xl transition-all duration-200 group-hover:scale-105">
@@ -62,7 +65,9 @@ export function SearchAlbumsSection({ albums, query }: SearchAlbumsSectionProps)
                     {album.name}
                   </h3>
                   <p className="text-xs text-muted-foreground/80 truncate">
-                    {album.tracks?.length ? `${album.tracks.length} tracks` : 'Album'}
+                    {album.tracks?.length
+                      ? `${album.tracks.length} tracks`
+                      : 'Album'}
                   </p>
                 </div>
               </div>
