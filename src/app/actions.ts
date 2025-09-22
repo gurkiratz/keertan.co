@@ -57,7 +57,8 @@ export async function getLibrary(): Promise<Library> {
     }),
     cache: 'force-cache',
     next: {
-      revalidate: 60 * 60 * 24, // revalidate every 24 hours
+      revalidate: 60 * 10, // revalidate every 10 minutes
+      tags: ['library'], // Add cache tag for targeted revalidation
     },
   })
 
