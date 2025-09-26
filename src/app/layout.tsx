@@ -78,13 +78,11 @@ export default async function RootLayout({
               <Header />
               <div className="flex-1 flex py-16">
                 <AppSidebar />
-                <main className="flex-1 overflow-auto pb-24 md:pb-0">
+                <main className="flex-1 overflow-auto pb-[calc(env(safe-area-inset-bottom)+140px)] md:pb-[200px]">
                   {children}
                 </main>
               </div>
-              <div className="fixed bottom-16 md:bottom-0 left-0 right-0 z-50">
-                <PlayerWrapper library={library} getStreamUrl={getStreamUrl} />
-              </div>
+              <PlayerWrapper library={library} getStreamUrl={getStreamUrl} />
               <MobileTabs />
             </div>
           </SidebarProvider>
