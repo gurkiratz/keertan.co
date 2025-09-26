@@ -78,7 +78,7 @@ export default async function RootLayout({
               <Header />
               <div className="flex-1 flex py-16">
                 <AppSidebar />
-                <main className="flex-1 overflow-auto pb-32 md:pb-0">
+                <main className="flex-1 overflow-auto pb-[calc(env(safe-area-inset-bottom)+140px)] md:pb-[200px]">
                   {children}
                 </main>
               </div>

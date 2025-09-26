@@ -410,11 +410,11 @@ export function Player({ library, getStreamUrl }: PlayerProps) {
   return (
     <>
       {/* Mobile Player Drawer - only visible on small screens */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-background border-t z-50">
+      <div className="md:hidden fixed left-0 right-0 bottom-[72px] bg-background border-t z-50">
         {currentTrack && (
           <MobilePlayerDrawer
             library={library}
-            playerRef={playerRef}
+            playerRef={playerRef as React.RefObject<ReactPlayer>}
             volume={volume}
             setVolume={setVolume}
             handleSliderChange={handleSliderChange}
@@ -424,7 +424,7 @@ export function Player({ library, getStreamUrl }: PlayerProps) {
       </div>
 
       {/* Desktop Player - only visible on md and larger screens */}
-      <div className="hidden md:block bg-muted border-t border-border">
+      <div className="hidden md:block fixed bottom-0 left-0 right-0 bg-muted border-t border-border z-40">
         <div className="pb-2 md:pb-2">
           <div className="relative w-full group">
             {/* Desktop hover-based slider */}
@@ -478,7 +478,7 @@ export function Player({ library, getStreamUrl }: PlayerProps) {
           </div>
         </div>
       </div>
-      
+
       {/* Hidden ReactPlayer for both mobile and desktop */}
       {streamUrl && (
         <ReactPlayer
