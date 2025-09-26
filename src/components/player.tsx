@@ -9,6 +9,7 @@ import { useTrackStore } from '@/store/track'
 import type { Track, Library } from '@/app/actions'
 import Image from 'next/image'
 import { QueueDrawer } from '@/components/queue-drawer'
+import { MobilePlayerDrawer } from '@/components/mobile-player-drawer'
 
 type PlayerProps = {
   library: Library
@@ -407,86 +408,92 @@ export function Player({ library, getStreamUrl }: PlayerProps) {
   }, [currentTrack, playing, setPlaying, handleNextTrack, handlePreviousTrack])
 
   return (
-    <div className="bg-muted border-t border-border">
-      <div className="pb-2 md:pb-2">
-        <div className="relative w-full group">
-          {/* Mobile-friendly touch area */}
-          <div className="md:hidden px-4 py-1 pt-3">
-            <Slider
-              className="w-full cursor-pointer"
-              thumbClassname="block h-5 w-2 shadow-md border-0 bg-primary rounded-md transition-all duration-200 hover:scale-110 active:scale-105"
-              trackClassname="rounded-full h-1"
-              value={[progress]}
-              max={100}
-              step={1}
-              onValueChange={handleSliderChange}
-            />
-          </div>
-
-          {/* Desktop hover-based slider */}
-          <div className="hidden md:block">
-            <Slider
-              className="w-full cursor-pointer"
-              thumbClassname="hidden group-hover:block transition-all duration-200"
-              trackClassname="rounded-none h-1 group-hover:h-1.5 transition-all duration-200"
-              value={[progress]}
-              max={100}
-              step={1}
-              onValueChange={handleSliderChange}
-              onMouseMove={(e) => {
-                if (currentTrack) {
-                  const rect = e.currentTarget.getBoundingClientRect()
-                  const pos =
-                    ((e.clientX - rect.left) / rect.width) *
-                    currentTrack.duration
-                  const tooltip = e.currentTarget
-                    .nextElementSibling as HTMLDivElement
-                  if (tooltip) {
-                    tooltip.style.left = `${e.clientX - rect.left}px`
-                    tooltip.textContent = formatTime(pos)
-                  }
-                }
-              }}
-            />
-            <div className="absolute top-[-25px] transform -translate-x-1/2 bg-popover text-popover-foreground px-2 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
-          </div>
-        </div>
-      </div>
-      <div className="flex flex-col w-full">
-        <div className="flex items-center md:justify-between px-4 pb-4 gap-8">
-          <TrackInfo
-            currentTrack={currentTrack}
+    <>
+      {/* Mobile Player Drawer - only visible on small screens */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-background border-t z-50">
+        {currentTrack && (
+          <MobilePlayerDrawer
             library={library}
-            loading={loading}
-          />
-          <Controls
-            currentTrack={currentTrack}
-            playing={playing}
-            progress={progress}
-            handlePlayPause={handlePlayPause}
-            handleNextTrack={handleNextTrack}
-            handlePreviousTrack={handlePreviousTrack}
+            playerRef={playerRef}
+            volume={volume}
+            setVolume={setVolume}
+            handleSliderChange={handleSliderChange}
             formatTime={formatTime}
-            library={library}
-            queue={queue}
           />
-          <VolumeControl volume={volume} setVolume={setVolume} />
-          {streamUrl && (
-            <ReactPlayer
-              ref={playerRef}
-              url={streamUrl}
-              playing={playing}
-              volume={volume}
-              style={{ display: 'none' }}
-              onProgress={handleProgress}
-              onReady={() => setLoading(false)}
-              onError={() => setLoading(false)}
-              onEnded={handleTrackEnd}
+        )}
+      </div>
+
+      {/* Desktop Player - only visible on md and larger screens */}
+      <div className="hidden md:block bg-muted border-t border-border">
+        <div className="pb-2 md:pb-2">
+          <div className="relative w-full group">
+            {/* Desktop hover-based slider */}
+            <div>
+              <Slider
+                className="w-full cursor-pointer"
+                thumbClassname="hidden group-hover:block transition-all duration-200"
+                trackClassname="rounded-none h-1 group-hover:h-1.5 transition-all duration-200"
+                value={[progress]}
+                max={100}
+                step={1}
+                onValueChange={handleSliderChange}
+                onMouseMove={(e) => {
+                  if (currentTrack) {
+                    const rect = e.currentTarget.getBoundingClientRect()
+                    const pos =
+                      ((e.clientX - rect.left) / rect.width) *
+                      currentTrack.duration
+                    const tooltip = e.currentTarget
+                      .nextElementSibling as HTMLDivElement
+                    if (tooltip) {
+                      tooltip.style.left = `${e.clientX - rect.left}px`
+                      tooltip.textContent = formatTime(pos)
+                    }
+                  }
+                }}
+              />
+              <div className="absolute top-[-25px] transform -translate-x-1/2 bg-popover text-popover-foreground px-2 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-col w-full">
+          <div className="flex items-center md:justify-between px-4 pb-4 gap-8">
+            <TrackInfo
+              currentTrack={currentTrack}
+              library={library}
+              loading={loading}
             />
-          )}
+            <Controls
+              currentTrack={currentTrack}
+              playing={playing}
+              progress={progress}
+              handlePlayPause={handlePlayPause}
+              handleNextTrack={handleNextTrack}
+              handlePreviousTrack={handlePreviousTrack}
+              formatTime={formatTime}
+              library={library}
+              queue={queue}
+            />
+            <VolumeControl volume={volume} setVolume={setVolume} />
+          </div>
         </div>
       </div>
-    </div>
+      
+      {/* Hidden ReactPlayer for both mobile and desktop */}
+      {streamUrl && (
+        <ReactPlayer
+          ref={playerRef}
+          url={streamUrl}
+          playing={playing}
+          volume={volume}
+          style={{ display: 'none' }}
+          onProgress={handleProgress}
+          onReady={() => setLoading(false)}
+          onError={() => setLoading(false)}
+          onEnded={handleTrackEnd}
+        />
+      )}
+    </>
   )
 }
 
@@ -560,13 +567,12 @@ function Controls({
       <Button
         variant="ghost"
         size="icon"
-        className="w-8 h-8 hidden sm:inline-flex"
+        className="w-8 h-8"
         onClick={handlePreviousTrack}
         disabled={!currentTrack}
       >
         <SkipBack className="w-4 h-4" />
       </Button>
-      <QueueDrawer library={library} className="sm:hidden" />
       <Button
         variant="ghost"
         size="icon"
@@ -585,8 +591,8 @@ function Controls({
       >
         <SkipForward className="w-4 h-4" />
       </Button>
-      <QueueDrawer library={library} className="hidden sm:inline-flex" />
-      <div className="hidden md:flex items-center gap-2 text-xs text-muted-foreground">
+      <QueueDrawer library={library} />
+      <div className="flex items-center gap-2 text-xs text-muted-foreground">
         <span>
           {currentTrack
             ? formatTime((progress / 100) * currentTrack.duration)
