@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { getLibrary } from '@/app/actions'
+import { getLibrary, getStreamUrl as getStreamUrlAction } from '@/app/actions'
 
 export type Track = {
   id: string
@@ -32,9 +32,6 @@ type Library = {
   }
 }
 
-const user_id = process.env.USER_ID
-const token = process.env.TOKEN
-
 export function useLibrary() {
   const [loading, setLoading] = useState(true)
   const [library, setLibrary] = useState<Library | null>(null)
@@ -56,12 +53,17 @@ export function useLibrary() {
     fetchLibrary()
   }, [])
 
-  function getStreamUrl(trackId: string) {
+  async function getStreamUrl(trackId: string) {
     if (!library) return ''
     const track = library.tracks[trackId]
     if (!track) return ''
 
-    return `${library.settings.streaming_server}${track.path}?Expires=${library.expires}&Signature=${token}&user_id=${user_id}&platform=Postman&version=1.0.0`
+    try {
+      return await getStreamUrlAction(track, library)
+    } catch (e) {
+      console.error(e)
+      return ''
+    }
   }
 
   return { loading, library, error, getStreamUrl }

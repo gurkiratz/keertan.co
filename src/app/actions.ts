@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use server'
 
+import { getServiceAccessToken } from '@/lib/oauth'
+
 // import { data as iBroadcastData } from '@/lib/libraryData'
 
 export type Track = {
@@ -36,24 +38,20 @@ export type Library = {
   settings: {
     streaming_server: string
   }
+  user_id: string
 }
 
 export async function getLibrary(): Promise<Library> {
-  const user_id = process.env.USER_ID
-  const token = process.env.TOKEN
-
-  if (!user_id || !token) {
-    throw new Error('USER_ID and TOKEN must be set in environment variables')
-  }
+  const accessToken = await getServiceAccessToken()
 
   const response = await fetch('https://library.ibroadcast.com/', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
     },
     body: JSON.stringify({
-      user_id,
-      token,
+      // Some APIs expect empty object rather than no body
     }),
     cache: 'force-cache',
     next: {
@@ -62,11 +60,21 @@ export async function getLibrary(): Promise<Library> {
     },
   })
 
-  if (!response.ok) {
+  const data = await response.json()
+
+  if (!response.ok || data.authenticated === false) {
+    if (data.authenticated === false) {
+      throw new Error('Authentication failed')
+    }
     throw new Error('Failed to fetch library')
   }
 
-  const data = await response.json()
+  // The response structure might be slightly different or the same
+  // Assuming data.library exists as before
+  if (!data.library) {
+    console.error('Unexpected library response:', data)
+    throw new Error('Invalid library data')
+  }
 
   const tracks: Record<string, Track> = {}
   Object.entries(data.library.tracks).forEach(([id, track]: [string, any]) => {
@@ -116,6 +124,16 @@ export async function getLibrary(): Promise<Library> {
     playlists,
     expires: data.library.expires,
     settings: data.settings,
+    user_id: data.user.id,
+  }
+}
+
+export async function getLibrarySession(): Promise<Library | null> {
+  try {
+    return await getLibrary()
+  } catch (e) {
+    console.error('Failed to get library session:', e)
+    return null
   }
 }
 
@@ -123,12 +141,10 @@ export async function getStreamUrl(
   track: Track,
   library: Library
 ): Promise<string> {
-  const user_id = process.env.USER_ID
-  const token = process.env.TOKEN
+  const accessToken = await getServiceAccessToken()
 
-  if (!user_id || !token) {
-    throw new Error('USER_ID and TOKEN must be set in environment variables')
-  }
+  // Documentation: [streaming_server]/[url]?Expires=[now]&Signature=[user token]&file_id=[file ID]&user_id=[user ID]&platform=[your app name]&version=[your app version]
+  const timestamp = Date.now() // "Expires=[now]" per docs
 
-  return `${library.settings.streaming_server}${track.path}?Expires=${library.expires}&Signature=${token}&user_id=${user_id}&platform=Web&version=1.0.0`
+  return `${library.settings.streaming_server}${track.path}?Expires=${timestamp}&Signature=${accessToken}&file_id=${track.id}&user_id=${library.user_id}&platform=Keertan&version=1.0.0`
 }

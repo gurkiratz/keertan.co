@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import localFont from 'next/font/local'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { SidebarProvider } from '@/components/ui/sidebar'
-import { getLibrary, getStreamUrl } from '@/app/actions'
+import { getLibrarySession, getStreamUrl } from '@/app/actions'
 import { PlayerWrapper } from '@/components/player-wrapper'
 import { TitleManager } from '@/components/title-manager'
 import { Providers } from '@/components/providers'
@@ -49,7 +49,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const library = await getLibrary()
+  const library = await getLibrarySession()
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -72,20 +72,24 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${customFont.variable} antialiased`}
       >
         <Providers>
-          <SidebarProvider defaultOpen={true}>
-            <TitleManager library={library} />
-            <div className="min-h-screen w-full flex flex-col">
-              <Header />
-              <div className="flex-1 flex py-16">
-                <AppSidebar />
-                <main className="flex-1 overflow-auto pb-[calc(env(safe-area-inset-bottom)+140px)] md:pb-[200px]">
-                  {children}
-                </main>
+          {library ? (
+            <SidebarProvider defaultOpen={true}>
+              <TitleManager library={library} />
+              <div className="min-h-screen w-full flex flex-col">
+                <Header />
+                <div className="flex-1 flex py-16">
+                  <AppSidebar />
+                  <main className="flex-1 overflow-auto pb-[calc(env(safe-area-inset-bottom)+140px)] md:pb-[200px]">
+                    {children}
+                  </main>
+                </div>
+                <PlayerWrapper library={library} getStreamUrl={getStreamUrl} />
+                <MobileTabs />
               </div>
-              <PlayerWrapper library={library} getStreamUrl={getStreamUrl} />
-              <MobileTabs />
-            </div>
-          </SidebarProvider>
+            </SidebarProvider>
+          ) : (
+            children
+          )}
         </Providers>
       </body>
     </html>
